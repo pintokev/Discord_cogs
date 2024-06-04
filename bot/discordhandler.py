@@ -3,7 +3,6 @@ import os
 from time import time
 import discord
 from discord.ext import commands
-
 from config.settings import DISCORD_TOKEN
 
 intents = discord.Intents.all()
@@ -48,6 +47,13 @@ async def load_cogs(bot):
                 await bot.load_extension(cog_name)
         except Exception as e:
             print(f'Echec du chargement de l\'extension {filename}: {e}')
+@bot.event
+async def on_message(ctx):
+    if ctx.author == bot.user:
+        return
+    if ctx.content.lower() == 'ping':
+        await ctx.channel.send('Pong!')
+    await bot.process_commands(ctx)
 
 def cut_msg(msg): return [msg[i:i + 1900] for i in range(0, len(msg), 1900)]
 async def send_msg(ctx, msg): return await ctx.send(content=str(msg))
@@ -55,6 +61,7 @@ async def edit_msg(M, msg):
     if msg != "":await M.edit(content=str(msg))
 async def send_to_discord(ctx, M, msg):
     global time_msg
+    print(msg)
     if not time() - time_msg < 1:
         time_msg = time()
         if len(msg) <= 1900:
@@ -67,13 +74,7 @@ async def send_to_discord(ctx, M, msg):
             M = await send_msg(ctx, msg)
     return M, msg
 
-@bot.event
-async def on_message(ctx):
-    if ctx.author == bot.user:
-        return
-    if ctx.content.lower() == 'ping':
-        await ctx.channel.send('Pong!')
-    await bot.process_commands(ctx)
+
 
 if __name__ == "__main__":
     bot.run(DISCORD_TOKEN)
