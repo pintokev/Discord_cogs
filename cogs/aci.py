@@ -100,7 +100,7 @@ class Aci(commands.Cog):
             "content": "Voici les fichiers. Retourne moi seulement une phrase m'indiquant que les fichiers ont été sauvegarder, donne moi les file_id de chacun des fichiers présent et rien d'autre",
             "for_code_interpreter": True
         }
-        if ctx.message.attachments: await stream_reponse_file(ctx, metadata)
+        if ctx.message.attachments: await stream_reponse_file(ctx, thread, metadata)
 
 
 async def setup(bot):

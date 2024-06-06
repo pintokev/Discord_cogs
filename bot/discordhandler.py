@@ -90,23 +90,7 @@ async def stream_reponse(thread, metadata, headers):
                 M, msg = await send_to_discord(thread, M, msg)
         await edit_msg(M, msg)
 
-# async def stream_reponse_file(ctx, metadata):
-#     form_data = aiohttp.FormData()
-#     async with aiohttp.ClientSession() as session:
-#         form_data.add_field('metadata', dumps(metadata), content_type="multipart/form-data")
-#         for attachment in ctx.message.attachments:
-#             file_data = await attachment.read()
-#             form_data.add_field('file', file_data, filename=attachment.filename)
-#         try:
-#             async with session.post(settings.url, data=form_data) as response:
-#                 if response.status == 200:
-#                     await ctx.send(f"Fichier(s) envoyé(s) avec succès : {response.status}")
-#                 else:
-#                     await ctx.send(f"Erreur lors de l'envoi du fichier : {response.status}")
-#         except aiohttp.ClientError as e:
-#             await ctx.send(f"Erreur lors de l'envoi du fichier : {str(e)}")
-
-async def stream_reponse_file(ctx, metadata):
+async def stream_reponse_file(ctx, thread, metadata):
     form_data = aiohttp.FormData()
     form_data.add_field('metadata', dumps(metadata), content_type="multipart/form-data")
 
@@ -116,27 +100,13 @@ async def stream_reponse_file(ctx, metadata):
                 file_data = await attachment.read()
                 form_data.add_field('file', file_data, filename=attachment.filename)
         msg = ""
-        M = await send_msg(ctx.channel, "Message en cours...")
+        M = await send_msg(thread, "Message en cours...")
         async with session.post(settings.url, data=form_data) as response:
             async for chunk in response.content.iter_chunked(1024):
                 print(chunk.decode('utf-8'), end="", flush=True)
                 msg += chunk.decode('utf-8')
-                M, msg = await send_to_discord(ctx.channel, M, msg)
+                M, msg = await send_to_discord(thread, M, msg)
         await edit_msg(M, msg)
-
-    # async with aiohttp.ClientSession() as session:
-    #     for attachment in ctx.message.attachments:
-    #         file_data = await attachment.read()
-    #         form_data.add_field('file', file_data, filename=attachment.filename)
-    #     try:
-    #         async with session.post(settings.url, data=form_data) as response:
-    #             if response.status == 200:
-    #                 await ctx.send(f"Fichier(s) envoyé(s) avec succès : {response.status}")
-    #             else:
-    #                 await ctx.send(f"Erreur lors de l'envoi du fichier : {response.status}")
-    #     except aiohttp.ClientError as e:
-    #         await ctx.send(f"Erreur lors de l'envoi du fichier : {str(e)}")
-
 
 if __name__ == "__main__":
     bot.run(DISCORD_TOKEN)

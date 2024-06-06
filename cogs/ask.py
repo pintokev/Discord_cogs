@@ -69,7 +69,7 @@ class Ask(commands.Cog):
                 url_file_list.append(attachment.url)
             metadata["files"] = url_file_list
                 # file_data = await attachment.read()
-        await stream_reponse_file(ctx, metadata)
+        await stream_reponse_file(ctx, thread, metadata)
 
 
 async def setup(bot):
