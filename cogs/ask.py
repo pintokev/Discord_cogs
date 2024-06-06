@@ -5,7 +5,7 @@ import aiohttp
 import requests
 from discord.ext import commands
 from config import settings
-from bot.discordhandler import createThread, send_msg, edit_msg, send_to_discord
+from bot.discordhandler import createThread, stream_reponse, stream_reponse_file
 
 
 class Ask(commands.Cog):
@@ -57,9 +57,7 @@ class Ask(commands.Cog):
     @commands.command(name='ask', aliases=["da"])
     async def ask(self, ctx, *, message):
         thread = await createThread(ctx, message)
-
-        # headers = {"Content-Type": "application/json"}
-
+        headers = {"Content-Type": "application/json"}
         metadata = {
             "api_key": settings.api_key,
             "content": str(message),
@@ -71,16 +69,8 @@ class Ask(commands.Cog):
                 url_file_list.append(attachment.url)
             metadata["files"] = url_file_list
                 # file_data = await attachment.read()
-        async with aiohttp.ClientSession() as session:
-            msg = ""
-            M = await send_msg(thread, "Message en cours...")
-            async with session.post(self.url, json=metadata) as response:
-                print(metadata)
-                async for chunk in response.content.iter_chunked(1024):
-                    print(chunk.decode('utf-8'), end="", flush=True)
-                    msg += chunk.decode('utf-8')
-                    M, msg = await send_to_discord(thread, M, msg)
-            await edit_msg(M, msg)
+        await stream_reponse_file(ctx, metadata)
+
 
 async def setup(bot):
     await bot.add_cog(Ask(bot))
