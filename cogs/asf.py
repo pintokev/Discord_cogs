@@ -1,10 +1,4 @@
-from json import dumps
-
-import aiohttp
-import discord
 from discord.ext import commands
-import requests
-import os
 
 from bot.discordhandler import createThread, stream_reponse_file
 from config import settings
@@ -20,10 +14,10 @@ class Asf(commands.Cog):
         metadata = {
             "api_key": settings.api_key,
             "id": str(thread.id),
-            "content": "Voici les fichiers. Retourne moi seulement une phrase m'indiquant que les fichiers ont été sauvegardé et stocker dans un vector openai",
+            "content": "Voici les fichiers. NE LES EXAMINE PAS ENCORE DIS MOI SIMPLEMENT SI TU LES AS RECU",
             "for_file_search": True
         }
-        if ctx.message.attachments: await stream_reponse_file(ctx, metadata)
+        if ctx.message.attachments: await stream_reponse_file(ctx, thread, metadata)
 
 
 async def setup(bot):

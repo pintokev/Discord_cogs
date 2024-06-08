@@ -2,6 +2,7 @@ import logging
 import os
 from json import dumps
 from time import time
+import re
 
 import aiohttp
 import discord
@@ -61,10 +62,12 @@ async def on_message(ctx):
     await bot.process_commands(ctx)
 
 def cut_msg(msg): return [msg[i:i + 1900] for i in range(0, len(msg), 1900)]
+def trouver_bloc_code(message): return re.search(r"```(\w+)", message).group(0)+"\n" if re.search(r"```(\w+)", message) else None
 async def send_msg(ctx, msg): return await ctx.send(content=str(msg))
 async def edit_msg(M, msg):
-    if msg != "":await M.edit(content=str(msg))
-async def send_to_discord(ctx, M, msg):
+    copy_msg = msg
+    if msg and msg!="":await M.edit(content=str(msg))
+async def send_to_discord(ctx, msg, M=None):
     global time_msg
     if not time() - time_msg < 1:
         time_msg = time()
@@ -73,7 +76,9 @@ async def send_to_discord(ctx, M, msg):
             else: await edit_msg(M, msg)
         else:
             msg = cut_msg(msg)
+            if trouver_bloc_code(msg[0]): msg[0] += "```"
             await edit_msg(M, msg[0])
+            if trouver_bloc_code(msg[0]): msg[1] = trouver_bloc_code(msg[0]) + msg[1]
             msg = msg[1]
             M = await send_msg(ctx, msg)
     return M, msg
@@ -83,11 +88,11 @@ async def stream_reponse(thread, metadata, headers):
         msg = ""
         M = await send_msg(thread, "Message en cours...")
         async with session.post(settings.url, json=metadata, headers=headers) as response:
-            print(metadata)
+            # print(metadata)
             async for chunk in response.content.iter_chunked(1024):
-                print(chunk.decode('utf-8'), end="", flush=True)
+                # print(chunk.decode('utf-8'), end="", flush=True)
                 msg += chunk.decode('utf-8')
-                M, msg = await send_to_discord(thread, M, msg)
+                M, msg = await send_to_discord(thread, msg, M)
         await edit_msg(M, msg)
 
 async def stream_reponse_file(ctx, thread, metadata):
@@ -103,9 +108,9 @@ async def stream_reponse_file(ctx, thread, metadata):
         M = await send_msg(thread, "Message en cours...")
         async with session.post(settings.url, data=form_data) as response:
             async for chunk in response.content.iter_chunked(1024):
-                print(chunk.decode('utf-8'), end="", flush=True)
-                msg += chunk.decode('utf-8')
-                M, msg = await send_to_discord(thread, M, msg)
+                # print(chunk.decode('utf-8'), end="", flush=True)
+                msg += str(chunk.decode('utf-8'))
+                M, msg = await send_to_discord(thread, msg, M)
         await edit_msg(M, msg)
 
 if __name__ == "__main__":
