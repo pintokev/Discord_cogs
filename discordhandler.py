@@ -65,6 +65,7 @@ def cut_msg(msg): return [msg[i:i + 1900] for i in range(0, len(msg), 1900)]
 def trouver_debut_bloc_code(message):
     pattern = r'(\w+)'
     matches = re.findall(pattern, message)
+    print(matches)
     return len(matches), matches[-1]
 def trouver_fin_bloc_code(message):
     pattern = r'(?=\s|\n|$)'
