@@ -71,7 +71,7 @@ def trouver_fin_bloc_code(message):
     pattern = r'```(?=\s|\n|$)'
     matches = re.findall(pattern, message)
     return len(matches)
-def trouver_bloc_code_cut(message): print(trouver_debut_bloc_code(message)[0], trouver_fin_bloc_code(message)) ; return trouver_debut_bloc_code(message)[0] == trouver_fin_bloc_code(message)
+def trouver_bloc_code_cut(message): return trouver_debut_bloc_code(message)[0] == trouver_fin_bloc_code(message)
 async def send_msg(ctx, msg): return await ctx.send(content=str(msg))
 async def edit_msg(M, msg):
     copy_msg = msg
@@ -85,9 +85,9 @@ async def send_to_discord(ctx, msg, M=None):
             else: await edit_msg(M, msg)
         else:
             msg = cut_msg(msg)
-            if trouver_bloc_code_cut(msg[0]) != False: msg[0] += "```"
+            if trouver_bloc_code_cut(msg[0]) == False: msg[0] += "```"
             await edit_msg(M, msg[0])
-            if trouver_bloc_code_cut(msg[0]) != False: msg[1] = trouver_debut_bloc_code(msg[0])[1] + msg[1]
+            if trouver_bloc_code_cut(msg[0]) == False: msg[1] = trouver_debut_bloc_code(msg[0])[1] + msg[1]
             msg = msg[1]
             M = await send_msg(ctx, msg)
     return M, msg
