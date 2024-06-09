@@ -6,13 +6,13 @@ from bot.discordhandler import createThread
 from config import settings
 
 
-class Clear(commands.Cog):
+class Cclear(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
 
-    @commands.command(name='clear', aliases=["clear"])
-    async def clear(self, ctx):
+    @commands.command(name='cclear', aliases=["cc"])
+    async def cclear(self, ctx):
         thread = await createThread(ctx, "Thread créé")
         metadata = {
             "api_key": settings.api_key,
@@ -22,4 +22,4 @@ class Clear(commands.Cog):
         await thread.send(rep.text)
 
 async def setup(bot):
-    await bot.add_cog(Clear(bot))
+    await bot.add_cog(Cclear(bot))
