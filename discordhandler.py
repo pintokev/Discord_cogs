@@ -63,7 +63,7 @@ async def on_message(ctx):
 
 def cut_msg(msg): return [msg[i:i + 1900] for i in range(0, len(msg), 1900)]
 def trouver_debut_bloc_code(message): return re.search(r"```(\w+)", message).group(0)+"\n" if re.search(r"```(\w+)", message) else False
-def trouver_fin_bloc_code(message): return re.search(r"'''(?=\s|\n|$)", message).group(0) + "\n" if re.search(r"'''(?=\s|\n|$)", message) else False
+def trouver_fin_bloc_code(message): return re.search(r"```(?=\s|\n|$)", message).group(0) + "\n" if re.search(r"```(?=\s|\n|$)", message) else False
 def trouver_bloc_code_cut(message):
     if trouver_debut_bloc_code(message): return trouver_debut_bloc_code(message) and not trouver_fin_bloc_code(message)
 async def send_msg(ctx, msg): return await ctx.send(content=str(msg))
