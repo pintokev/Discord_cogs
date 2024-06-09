@@ -63,12 +63,12 @@ async def on_message(ctx):
 
 def cut_msg(msg): return [msg[i:i + 1900] for i in range(0, len(msg), 1900)]
 def trouver_debut_bloc_code(message):
-    pattern = r'(\w+)'
+    pattern = r'```(\w+)'
     matches = re.findall(pattern, message)
     print(matches)
     return len(matches), matches[-1]
 def trouver_fin_bloc_code(message):
-    pattern = r'(?=\s|\n|$)'
+    pattern = r'```(?=\s|\n|$)'
     matches = re.findall(pattern, message)
     return len(matches)
 def trouver_bloc_code_cut(message): print(trouver_debut_bloc_code(message)[0]) ; return trouver_debut_bloc_code(message)[0] == trouver_fin_bloc_code(message)
