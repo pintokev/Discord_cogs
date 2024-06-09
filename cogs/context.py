@@ -1,8 +1,6 @@
-from time import time
-
 import requests
 from discord.ext import commands
-from bot.discordhandler import createThread
+from discordhandler import createThread
 from config import settings
 
 

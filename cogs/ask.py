@@ -1,11 +1,7 @@
-import os
-from json import dumps
 from time import time
-import aiohttp
-import requests
+from discordhandler import createThread, stream_reponse_file
 from discord.ext import commands
 from config import settings
-from bot.discordhandler import createThread, stream_reponse, stream_reponse_file
 
 
 class Ask(commands.Cog):

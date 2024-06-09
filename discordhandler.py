@@ -38,7 +38,7 @@ def clear_thread_prompt(guild):
 
 async def load_cogs(bot):
     logging.basicConfig(level=logging.DEBUG)
-    try: cogs_dir = os.path.join(os.path.dirname(__file__), '..', 'cogs')
+    try: cogs_dir = os.path.join(os.path.dirname(__file__), 'cogs')
     except Exception as e:
         print(f"Erreur lors de la construction du chemin : {e}")
         return

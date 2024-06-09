@@ -1,5 +1,5 @@
 from discord.ext import commands
-from bot.discordhandler import createThread, stream_reponse_file
+from discordhandler import createThread, stream_reponse_file
 from config import settings
 
 
