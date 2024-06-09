@@ -66,7 +66,7 @@ def trouver_debut_bloc_code(message):
     pattern = r'```(\w+)'
     matches = re.findall(pattern, message)
     print(matches)
-    return len(matches), matches[-1]
+    return len(matches), "```"+matches[-1]
 def trouver_fin_bloc_code(message):
     pattern = r'```(?=\s|\n|$)'
     matches = re.findall(pattern, message)
