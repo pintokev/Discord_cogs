@@ -85,9 +85,10 @@ async def send_to_discord(ctx, msg, M=None):
             else: await edit_msg(M, msg)
         else:
             msg = cut_msg(msg)
-            if trouver_bloc_code_cut(msg[0]) == False: msg[0] += "```"
+            if trouver_bloc_code_cut(msg[0]) == False:
+                msg[0] += "```"
+                msg[1] = trouver_debut_bloc_code(msg[0])[1] + msg[1]
             await edit_msg(M, msg[0])
-            if trouver_bloc_code_cut(msg[0]) == False: msg[1] = trouver_debut_bloc_code(msg[0])[1] + msg[1]
             msg = msg[1]
             M = await send_msg(ctx, msg)
     return M, msg
