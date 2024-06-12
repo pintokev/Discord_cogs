@@ -136,7 +136,8 @@ async def stream_reponse_file(ctx, thread, metadata):
         await edit_msg(M, msg)
 '''
 async def stream_reponse_file(ctx, thread, metadata):
-    metadata["instructions"] = instructions+metadata["instructions"]
+    if "instructions" in metadata: metadata["instructions"] = instructions+metadata["instructions"]
+    else: metadata["instructions"] = instructions
     form_data = aiohttp.FormData()
     form_data.add_field('metadata', dumps(metadata), content_type="multipart/form-data")
 
