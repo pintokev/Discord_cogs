@@ -11,7 +11,7 @@ class Ask(commands.Cog):
         self.time_msg = time()
         self.temp_cut = 1
 
-    @commands.command(name='ask', aliases=["da"])
+    @commands.command(name='ask', aliases=["a"])
     async def ask(self, ctx, *, message):
         thread = await createThread(ctx, message)
         headers = {"Content-Type": "application/json"}

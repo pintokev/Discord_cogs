@@ -9,7 +9,7 @@ class Contexte(commands.Cog):
         self.bot = bot
 
 
-    @commands.command(name='contexte', aliases=["dc"])
+    @commands.command(name='contexte', aliases=["c"])
     async def contexte(self, ctx, *, message):
         thread = await createThread(ctx, message)
         metadata = {
