@@ -9,7 +9,7 @@ class Cclear(commands.Cog):
         self.bot = bot
 
 
-    @commands.command(name='cclear', aliases=["cc"])
+    @commands.command(name='cclear', aliases=["dcc"])
     async def cclear(self, ctx):
         thread = await createThread(ctx, "Thread créé")
         metadata = {
