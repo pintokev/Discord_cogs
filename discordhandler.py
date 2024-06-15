@@ -64,18 +64,15 @@ async def on_message(ctx):
 
 def cut_msg(msg): return [msg[i:i + 1900] for i in range(0, len(msg), 1900)]
 def trouver_debut_bloc_code(message):
-    pattern = r"'''(\w+)"
+    pattern = r'```(\w+)'
     matches = re.findall(pattern, message)
-    if matches:
-        return len(matches), "'''" + matches[-1] + "\n"
-    return 0, ""  # Retourne 0 et une chaîne vide par défaut
-
+    if matches: return len(matches), "```"+matches[-1]+"\n"
+    else: return False
 def trouver_fin_bloc_code(message):
-    pattern = r"'''(?=\s|\n|$)"
+    pattern = r'```(?=\s|\n|$)'
     matches = re.findall(pattern, message)
-    if matches:
-        return len(matches)
-    return 0  # Retourne 0 par défaut
+    if matches: return len(matches)
+    else: return False
 def trouver_bloc_code_cut(message): return trouver_debut_bloc_code(message)[0] == trouver_fin_bloc_code(message)
 async def send_msg(ctx, msg): return await ctx.send(content=str(msg))
 async def edit_msg(M, msg):
