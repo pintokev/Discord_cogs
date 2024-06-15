@@ -72,7 +72,7 @@ def trouver_fin_bloc_code(message):
     pattern = r'```(?=\s|\n|$)'
     matches = re.findall(pattern, message)
     if matches: return len(matches)
-    else: return False
+    else: return 0
 def trouver_bloc_code_cut(message): return trouver_debut_bloc_code(message)[0] == trouver_fin_bloc_code(message)
 async def send_msg(ctx, msg): return await ctx.send(content=str(msg))
 async def edit_msg(M, msg):
