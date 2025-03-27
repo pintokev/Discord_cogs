@@ -4,20 +4,20 @@ from discordhandler import createThread
 from config import settings
 
 
-class Contexte(commands.Cog):
+class Add_Contexte(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
 
-    @commands.command(name='contexte', aliases=["c"])
-    async def contexte(self, ctx, *, message):
+    @commands.command(name='add_contexte', aliases=["ac"])
+    async def add_contexte(self, ctx, *, message):
         thread = await createThread(ctx, message)
         metadata = {
             "instruction": str(message),
             "id": str(thread.id)
         }
-        rep = requests.post(str(settings.instructions), json=metadata)
+        rep = requests.post(str(settings.instructions)+"?add", json=metadata)
         await thread.send(rep.text)
 
 async def setup(bot):
-    await bot.add_cog(Contexte(bot))
+    await bot.add_cog(Add_Contexte(bot))

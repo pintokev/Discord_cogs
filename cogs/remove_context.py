@@ -1,22 +1,22 @@
 import requests
-from discordhandler import createThread
 from discord.ext import commands
+from discordhandler import createThread
 from config import settings
 
 
-class Cclear(commands.Cog):
+class Remove_Contexte(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
 
-    @commands.command(name='cclear', aliases=["cc"])
-    async def cclear(self, ctx):
+    @commands.command(name='remove_contexte', aliases=["rc"])
+    async def remove_contexte(self, ctx):
         thread = await createThread(ctx, "Thread créé")
         metadata = {
             "id": str(thread.id)
         }
-        rep = requests.post(str(settings.clear), json=metadata)
+        rep = requests.post(str(settings.instructions)+"?remove", json=metadata)
         await thread.send(rep.text)
 
 async def setup(bot):
-    await bot.add_cog(Cclear(bot))
+    await bot.add_cog(Remove_Contexte(bot))

@@ -1,33 +1,42 @@
 from time import time
-from discordhandler import createThread, stream_reponse_file
+
+import requests
+from discordhandler import createThread, stream_reponse_file, send_to_discord, send_msg, new_stream
 from discord.ext import commands
 from config import settings
 
 
+
 class Ask(commands.Cog):
-    def __init__(self, bot):
+    def init(self, bot):
         self.bot = bot
-        self.url = settings.url
+        self.url = settings.stream
         self.time_msg = time()
         self.temp_cut = 1
 
     @commands.command(name='ask', aliases=["a"])
     async def ask(self, ctx, *, message):
         thread = await createThread(ctx, message)
-        headers = {"Content-Type": "application/json"}
-        metadata = {
-            "api_key": settings.api_key,
-            "content": str(message),
-            # "instructions": "Le code magique est 5441",
-            "id": str(thread.id)
+        headers = {
+            "Content-Type": "application/json",
+            # "Authorization": settings.api_key
         }
+        data = {
+            "content": str(message),
+            "id": str(thread.id),
+            "model": settings.model
+        }
+
         if ctx.message.attachments:
             url_file_list = []
             for attachment in ctx.message.attachments:
                 url_file_list.append(attachment.url)
-            metadata["files"] = url_file_list
-                # file_data = await attachment.read()
-        await stream_reponse_file(ctx, thread, metadata)
+            data["image_url"] = url_file_list
+        print(data)
+        response = requests.post(settings.stream, headers=headers, json=data, stream=True)
+
+        await new_stream(ctx, thread, response)
+
 
 
 async def setup(bot):

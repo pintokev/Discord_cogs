@@ -1,6 +1,9 @@
 from discord.ext import commands
 from discordhandler import createThread, stream_reponse_file
 from config import settings
+import requests
+import subprocess
+import os
 
 
 class Asf(commands.Cog):
@@ -10,13 +13,27 @@ class Asf(commands.Cog):
     @commands.command()
     async def asf(self, ctx):
         thread = await createThread(ctx, "Voici les fichiers")
-        metadata = {
-            "api_key": settings.api_key,
-            "id": str(thread.id),
-            "content": "Voici les fichiers. NE LES EXAMINE PAS ENCORE DIS MOI SIMPLEMENT SI TU LES AS RECU",
-            "for_file_search": True
-        }
-        if ctx.message.attachments: await stream_reponse_file(ctx, thread, metadata)
+
+        if ctx.message.attachments:
+            for attachment in ctx.message.attachments:
+                response = requests.get(attachment.url)
+                file_name = attachment.filename
+                with open(file_name, 'wb') as f:
+                    f.write(response.content)
+
+                command = [
+                    "curl",
+                    "-X", "POST", settings.file_search,
+                    "-H", f"Authorization: {settings.api_key}",
+                    "-F", f"data={{\"id\":\"{str(thread.id)}\"}};type=application/json",
+                    "-F", "file=@"+file_name
+                ]
+
+                result = subprocess.run(command, capture_output=True, text=True)
+
+                print(result.stdout)
+                os.remove(file_name)
+        else: return "Aucun fichier associé en pièces jointes\n"
 
 
 async def setup(bot):
