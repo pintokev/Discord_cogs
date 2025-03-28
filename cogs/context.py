@@ -16,7 +16,7 @@ class Contexte(commands.Cog):
             "instruction": str(message),
             "id": str(thread.id)
         }
-        rep = requests.post(str(settings.instructions), json=metadata)
+        rep = requests.post(str(settings.instructions_url), json=metadata)
         await thread.send(rep.text)
 
 async def setup(bot):

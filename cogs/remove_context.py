@@ -15,7 +15,7 @@ class Remove_Contexte(commands.Cog):
         metadata = {
             "id": str(thread.id)
         }
-        rep = requests.post(str(settings.instructions)+"?remove", json=metadata)
+        rep = requests.post(str(settings.instructions_url)+"?remove", json=metadata)
         await thread.send(rep.text)
 
 async def setup(bot):
