@@ -24,7 +24,14 @@ class Ask(commands.Cog):
         data = {
             "content": str(message),
             "id": str(thread.id),
-            "model": settings.model
+            "model": settings.model,
+            "temperature": settings.temperature,
+            "top_p": settings.top_p,
+            "frequency_penalty": settings.frequency_penalty,
+            "presence_penalty": settings.presence_penalty,
+            "max_prompt_token": settings.max_prompt_token,
+            "max_completion_token": settings.max_completion_token,
+            "instructions": settings.instructions
         }
 
         if ctx.message.attachments:
