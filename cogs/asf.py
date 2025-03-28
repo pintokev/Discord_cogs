@@ -21,7 +21,7 @@ class Asf(commands.Cog):
                 with open(file_name, 'wb') as f:
                     f.write(response.content)
 
-                if message != "": datas = f"data={{\"id\":\"{str(thread.id)}\", \"model\":\"{settings.model}\", \"content\":\"{content_variable}\"}};type=application/json",
+                if message != "": datas = f"data={{\"id\":\"{str(thread.id)}\", \"model\":\"{settings.model}\", \"content\":\"{message}\"}};type=application/json",
                 else: datas = f"data={{\"id\":\"{str(thread.id)}\", \"model\":\"{settings.model}\"}};type=application/json",
                 command = [
                     "curl",
