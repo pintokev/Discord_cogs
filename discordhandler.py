@@ -62,7 +62,7 @@ async def on_message(ctx):
         await ctx.channel.send('Pong!')
     await bot.process_commands(ctx)
 
-def cut_msg(msg): return [msg[i:i + 1900] for i in range(0, len(msg), 1900)]
+def cut_msg(msg): return [msg[i:i + 1800] for i in range(0, len(msg), 1800)]
 def trouver_debut_bloc_code(message):
     pattern = r'```(\w+)'
     matches = re.findall(pattern, message)
