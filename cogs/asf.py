@@ -11,7 +11,7 @@ class Asf(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def asf(self, ctx):
+    async def asf(self, ctx, *, message):
         thread = await createThread(ctx, "Voici les fichiers")
 
         if ctx.message.attachments:
@@ -21,11 +21,13 @@ class Asf(commands.Cog):
                 with open(file_name, 'wb') as f:
                     f.write(response.content)
 
+                if message != "": datas = f"data={{\"id\":\"{str(thread.id)}\", \"model\":\"{settings.model}\", \"content\":\"{content_variable}\"}};type=application/json",
+                else: datas = f"data={{\"id\":\"{str(thread.id)}\", \"model\":\"{settings.model}\"}};type=application/json",
                 command = [
                     "curl",
                     "-X", "POST", settings.file_search,
                     "-H", f"Authorization: {settings.api_key}",
-                    "-F", f"data={{\"id\":\"{str(thread.id)}\"}};type=application/json",
+                    "-F", datas,
                     "-F", "file=@"+file_name
                 ]
 
