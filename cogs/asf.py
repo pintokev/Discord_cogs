@@ -11,7 +11,7 @@ class Asf(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def asf(self, ctx, *, message):
+    async def asf(self, ctx):
         thread = await createThread(ctx, "Voici les fichiers")
 
         if ctx.message.attachments:
