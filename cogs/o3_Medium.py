@@ -25,7 +25,6 @@ class O3_Medium(commands.Cog):
             "content": str(message),
             "id": str(thread.id),
             "model": settings.model_reasoning,
-            "top_p": settings.top_p,
             "frequency_penalty": settings.frequency_penalty,
             "presence_penalty": settings.presence_penalty,
             "max_prompt_token": settings.max_prompt_token,
