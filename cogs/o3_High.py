@@ -25,7 +25,6 @@ class O3_High(commands.Cog):
             "content": str(message),
             "id": str(thread.id),
             "model": settings.model_reasoning,
-            "temperature": settings.temperature,
             "top_p": settings.top_p,
             "frequency_penalty": settings.frequency_penalty,
             "presence_penalty": settings.presence_penalty,
