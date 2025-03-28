@@ -21,13 +21,11 @@ class Asf(commands.Cog):
                 with open(file_name, 'wb') as f:
                     f.write(response.content)
 
-                if message != "": datas = f"data={{\"id\":\"{str(thread.id)}\", \"model\":\"{settings.model}\", \"content\":\"{message}\"}};type=application/json"
-                else: datas = f"data={{\"id\":\"{str(thread.id)}\", \"model\":\"{settings.model}\"}};type=application/json"
                 command = [
                     "curl",
                     "-X", "POST", settings.file_search,
                     "-H", f"Authorization: {settings.api_key}",
-                    "-F", datas,
+                    "-F", f"data={{\"id\":\"{str(thread.id)}\"}}",
                     "-F", "file=@"+file_name
                 ]
 
