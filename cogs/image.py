@@ -28,8 +28,6 @@ class image(commands.Cog):
 
     async def edit_image(self, message, filename, thread):
         import base64
-        if os.path.exists("image.png"):
-            os.remove("image.png")
         prompt_data = {
             "model": "gpt-image-1",
             "prompt": str(message)
@@ -51,8 +49,6 @@ class image(commands.Cog):
 
     async def create_image(self, message, thread):
         import base64
-        if os.path.exists("image.png"):
-            os.remove("image.png")
         prompt_data = {
             "model": "gpt-image-1",
             "quality": "high",  # ou autre valeur si besoin
@@ -81,8 +77,6 @@ class image(commands.Cog):
     @commands.command(name='image', aliases=["i"])
     async def image(self, ctx, *, message):
         thread = await createThread(ctx, "Voici l'image")
-        if os.path.exists("image.png"):
-            os.remove("image.png")
         if ctx.message.attachments:
             for attachment in ctx.message.attachments:
                 response = requests.get(attachment.url)
