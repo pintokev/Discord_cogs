@@ -1,6 +1,6 @@
 import os
 
-PORT = 5000
+PORT = 2000
 
 DISCORD_TOKEN = os.environ.get("tokenDiscord")
 stream = f'http://localhost:{PORT}/stream'
