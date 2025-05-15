@@ -83,6 +83,8 @@ class image(commands.Cog):
                 with open(file_name, 'wb') as f:
                     f.write(response.content)
                 await self.edit_image(message, file_name, thread)
+                import os
+                os.remove(file_name)
                 break
         else:
             await self.create_image(message, thread)
