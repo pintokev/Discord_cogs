@@ -26,25 +26,35 @@ class image(commands.Cog):
                 pass
         return None, message.strip()
 
-    @commands.command(name='image', aliases=["i"])
-    async def image(self, ctx, *, message):
-        thread = await createThread(ctx, "Voici les fichiers")
-        param_dict, message = self.split_json_and_text(message)
-
+    async def edit_image(self, message, filename, thread):
+        import base64
         prompt_data = {
-            "model": "dall-e-3",
-            "quality": "hd",  # ou autre valeur si besoin
-            "size": "1024x1024",  # adapte selon ce que tu veux
-            "style": "vivid",  # ou "natural", etc.
+            "model": "gpt-image-1",
             "prompt": str(message)
         }
-        print(prompt_data)
-        try:
-            for k in prompt_data:
-                if k in param_dict and k != "prompt":
-                    prompt_data[k] = param_dict[k]
-            prompt_data["prompt"] = message
-        except: pass
+
+        command = [
+            "curl",
+            "-X", "POST", settings.edit_images,
+            "-H", f"Authorization: {settings.api_key}",
+            "-F", f"data={json.dumps(prompt_data)}",
+            "-F", "file=@"+filename
+        ]
+
+        img_response = subprocess.run(command, capture_output=True)
+        image_b64 = img_response.stdout.decode().strip()
+        image_bytes = base64.b64decode(image_b64)
+        file = File(io.BytesIO(image_bytes), filename="image.png")
+        await thread.send(file=file)
+
+    async def create_image(self, message, thread):
+        import base64
+        prompt_data = {
+            "model": "gpt-image-1",
+            "quality": "high",  # ou autre valeur si besoin
+            "size": "1024x1024",  # adapte selon ce que tu veux
+            "prompt": str(message)
+        }
 
         command = [
             "curl",
@@ -53,15 +63,30 @@ class image(commands.Cog):
             "-F", f"data={json.dumps(prompt_data)}",
             # "-F", "file=@"+file_name
         ]
-
         img_response = subprocess.run(command, capture_output=True)
         img_url = img_response.stdout.decode().strip()
-        response = requests.get(img_url)
-        if response.status_code == 200:
-            file = File(io.BytesIO(response.content), filename="image.png")
-            await ctx.send(file=file)
+        try:
+            response = requests.get(img_url)
+            image = response.content
+        except:
+            image = base64.b64decode(img_url)
+        file = File(io.BytesIO(image), filename="image.png")
+        await thread.send(file=file)
+
+    @commands.command(name='image', aliases=["i"])
+    async def image(self, ctx, *, message):
+        thread = await createThread(ctx, "Voici l'image")
+        if ctx.message.attachments:
+            for attachment in ctx.message.attachments:
+                response = requests.get(attachment.url)
+                file_name = attachment.filename
+                with open(file_name, 'wb') as f:
+                    f.write(response.content)
+                await self.edit_image(message, file_name, thread)
+                break
         else:
-            await ctx.send("Impossible de récupérer l'image !")
+            await self.create_image(message, thread)
+
 
 async def setup(bot):
     await bot.add_cog(image(bot))
