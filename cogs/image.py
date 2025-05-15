@@ -28,6 +28,10 @@ class image(commands.Cog):
 
     async def edit_image(self, message, filename, thread):
         import base64
+        try:
+            import os
+            os.remove(file_name)
+        except: pass
         prompt_data = {
             "model": "gpt-image-1",
             "prompt": str(message)
@@ -46,8 +50,6 @@ class image(commands.Cog):
         image_bytes = base64.b64decode(image_b64)
         file = File(io.BytesIO(image_bytes), filename="image.png")
         await thread.send(file=file)
-        import os
-        os.remove(file_name)
 
     async def create_image(self, message, thread):
         import base64
