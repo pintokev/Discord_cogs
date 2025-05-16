@@ -20,7 +20,7 @@ class O3_Low(commands.Cog):
         thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",
-            'Authorization': f'Bearer {get_token(settings.instructions_url)}'
+            'Authorization': f'Bearer {get_token(settings.model_reasoning)}'
             # "Authorization": settings.api_key
         }
         data = {

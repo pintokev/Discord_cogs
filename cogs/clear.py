@@ -17,7 +17,7 @@ class Cclear(commands.Cog):
             "id": str(thread.id)
         }
         headers = {
-            'Authorization': f'Bearer {get_token(settings.instructions_url)}'
+            'Authorization': f'Bearer {get_token(settings.clear)}'
         }
         rep = requests.post(str(settings.clear), headers=headers, json=metadata)
         await thread.send(rep.text)

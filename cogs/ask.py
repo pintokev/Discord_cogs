@@ -20,7 +20,7 @@ class Ask(commands.Cog):
         thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",
-            'Authorization': f'Bearer {get_token(settings.instructions_url)}'
+            'Authorization': f'Bearer {get_token(settings.stream)}'
             # "Authorization": settings.api_key
         }
         data = {

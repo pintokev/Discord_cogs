@@ -17,7 +17,7 @@ class Remove_Historique(commands.Cog):
             "id": str(thread.id)
         }
         headers = {
-            'Authorization': f'Bearer {get_token(settings.instructions_url)}'
+            'Authorization': f'Bearer {get_token(settings.remove_historique)}'
         }
         rep = requests.post(str(settings.remove_historique), json=metadata, headers=headers)
         await thread.send(rep.text)

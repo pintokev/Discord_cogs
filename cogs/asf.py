@@ -25,7 +25,7 @@ class Asf(commands.Cog):
                 command = [
                     "curl",
                     "-X", "POST", settings.file_search,
-                    "-H", f"Authorization: Bearer {settings.api_key}",
+                    "-H", f"Authorization: Bearer {get_token(settings.file_search)}",
                     "-F", f"data={{\"id\":\"{str(thread.id)}\"}}",
                     "-F", "file=@"+file_name
                 ]

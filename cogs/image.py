@@ -37,7 +37,7 @@ class image(commands.Cog):
         command = [
             "curl",
             "-X", "POST", settings.edit_images,
-            "-H", f"Authorization: Bearer {settings.api_key}",
+            "-H", f"Authorization: Bearer {get_token(settings.edit_images)}",
             "-F", f"data={json.dumps(prompt_data)}",
             "-F", "file=@"+filename
         ]
@@ -61,7 +61,7 @@ class image(commands.Cog):
         command = [
             "curl",
             "-X", "POST", settings.images,
-            "-H", f"Authorization: {settings.api_key}",
+            "-H", f"Authorization: Bearer {get_token(settings.images)}",
             "-F", f"data={json.dumps(prompt_data)}",
             # "-F", "file=@"+file_name
         ]
