@@ -2,6 +2,7 @@ import requests
 from discord.ext import commands
 from discordhandler import createThread
 from config import settings
+from get_token_google import get_token
 
 
 class Remove_Contexte(commands.Cog):
@@ -15,7 +16,10 @@ class Remove_Contexte(commands.Cog):
         metadata = {
             "id": str(thread.id)
         }
-        rep = requests.post(str(settings.instructions_url)+"?remove", json=metadata)
+        headers = {
+            'Authorization': f'Bearer {get_token(settings.instructions_url)}'
+        }
+        rep = requests.post(str(settings.instructions_url)+"?remove", json=metadata, headers=headers)
         await thread.send(rep.text)
 
 async def setup(bot):

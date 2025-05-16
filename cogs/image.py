@@ -7,6 +7,7 @@ import subprocess
 import os
 import io
 import json
+from get_token_google import get_token
 
 
 class image(commands.Cog):
@@ -36,7 +37,7 @@ class image(commands.Cog):
         command = [
             "curl",
             "-X", "POST", settings.edit_images,
-            "-H", f"Authorization: {settings.api_key}",
+            "-H", f"Authorization: Bearer {settings.api_key}",
             "-F", f"data={json.dumps(prompt_data)}",
             "-F", "file=@"+filename
         ]

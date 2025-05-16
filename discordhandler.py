@@ -9,6 +9,14 @@ import discord
 from discord.ext import commands
 from config import settings
 from config.settings import DISCORD_TOKEN
+from flask import Flask
+import threading
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return 'Discord bot up & running!'
 
 intents = discord.Intents.all()
 intents.messages = True
@@ -170,5 +178,9 @@ async def new_stream(ctx, thread, reponse):
     msg += str(chunk.decode('utf-8'))
     await edit_msg(M, msg)
 
+def run_flask():
+    app.run(host='0.0.0.0', port=8080)
+
 if __name__ == "__main__":
+    threading.Thread(target=run_flask).start()
     bot.run(DISCORD_TOKEN)

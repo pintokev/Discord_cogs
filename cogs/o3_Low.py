@@ -4,6 +4,7 @@ import requests
 from discordhandler import createThread, stream_reponse_file, send_to_discord, send_msg, new_stream
 from discord.ext import commands
 from config import settings
+from get_token_google import get_token
 
 
 
@@ -19,6 +20,7 @@ class O3_Low(commands.Cog):
         thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",
+            'Authorization': f'Bearer {get_token(settings.instructions_url)}'
             # "Authorization": settings.api_key
         }
         data = {

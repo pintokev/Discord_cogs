@@ -2,6 +2,7 @@ import requests
 from discordhandler import createThread
 from discord.ext import commands
 from config import settings
+from get_token_google import get_token
 
 
 class Cclear(commands.Cog):
@@ -15,7 +16,10 @@ class Cclear(commands.Cog):
         metadata = {
             "id": str(thread.id)
         }
-        rep = requests.post(str(settings.clear), json=metadata)
+        headers = {
+            'Authorization': f'Bearer {get_token(settings.instructions_url)}'
+        }
+        rep = requests.post(str(settings.clear), headers=headers, json=metadata)
         await thread.send(rep.text)
 
 async def setup(bot):

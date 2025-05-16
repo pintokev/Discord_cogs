@@ -4,6 +4,7 @@ from config import settings
 import requests
 import subprocess
 import os
+from get_token_google import get_token
 
 
 class Asf(commands.Cog):
@@ -24,7 +25,7 @@ class Asf(commands.Cog):
                 command = [
                     "curl",
                     "-X", "POST", settings.file_search,
-                    "-H", f"Authorization: {settings.api_key}",
+                    "-H", f"Authorization: Bearer {settings.api_key}",
                     "-F", f"data={{\"id\":\"{str(thread.id)}\"}}",
                     "-F", "file=@"+file_name
                 ]
