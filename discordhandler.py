@@ -12,7 +12,9 @@ from config.settings import DISCORD_TOKEN
 
 intents = discord.Intents.all()
 intents.messages = True
+intents.message_content = True
 intents.guilds = True
+intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 threadPrompt = {}
 time_msg = time()
