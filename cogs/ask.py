@@ -40,9 +40,9 @@ class Ask(commands.Cog):
                 url_file_list.append(attachment.url)
             data["image_url"] = url_file_list
         # print(data)
-        response = requests.post(settings.stream, headers=headers, json=data, stream=True)
-
-        await new_stream(ctx, thread, response)
+        async with ctx.channel.typing():
+            response = requests.post(settings.stream, headers=headers, json=data, stream=True)
+            await new_stream(ctx, thread, response)
 
 
 
