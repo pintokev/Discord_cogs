@@ -81,21 +81,22 @@ async def edit_msg(M, msg):
     copy_msg = msg
     if msg and msg!="":await M.edit(content=str(msg))
 async def send_to_discord(ctx, msg, M=None):
-    global time_msg
-    if not time() - time_msg < 1:
-        time_msg = time()
-        if len(msg) <= 1900:
-            if M is None: M = await send_msg(ctx, msg)
-            else: await edit_msg(M, msg)
-        else:
-            msg = cut_msg(msg)
-            if trouver_bloc_code_cut(msg[0]) == False:
-                msg[0] += "```"
-                msg[1] = trouver_debut_bloc_code(msg[0])[1] + msg[1]
-            await edit_msg(M, msg[0])
-            msg = msg[1]
-            M = await send_msg(ctx, msg)
-    return M, msg
+    async with thread.typing():
+        global time_msg
+        if not time() - time_msg < 1:
+            time_msg = time()
+            if len(msg) <= 1900:
+                if M is None: M = await send_msg(ctx, msg)
+                else: await edit_msg(M, msg)
+            else:
+                msg = cut_msg(msg)
+                if trouver_bloc_code_cut(msg[0]) == False:
+                    msg[0] += "```"
+                    msg[1] = trouver_debut_bloc_code(msg[0])[1] + msg[1]
+                await edit_msg(M, msg[0])
+                msg = msg[1]
+                M = await send_msg(ctx, msg)
+        return M, msg
 
 async def stream_reponse(thread, metadata, headers):
     metadata["instructions"] = instructions+metadata["instructions"]
