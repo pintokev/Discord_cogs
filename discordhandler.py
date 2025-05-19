@@ -81,22 +81,21 @@ async def edit_msg(M, msg):
     copy_msg = msg
     if msg and msg!="":await M.edit(content=str(msg))
 async def send_to_discord(ctx, msg, M=None):
-    async with ctx.typing():
-        global time_msg
-        if not time() - time_msg < 1:
-            time_msg = time()
-            if len(msg) <= 1900:
-                if M is None: M = await send_msg(ctx, msg)
-                else: await edit_msg(M, msg)
-            else:
-                msg = cut_msg(msg)
-                if trouver_bloc_code_cut(msg[0]) == False:
-                    msg[0] += "```"
-                    msg[1] = trouver_debut_bloc_code(msg[0])[1] + msg[1]
-                await edit_msg(M, msg[0])
-                msg = msg[1]
-                M = await send_msg(ctx, msg)
-        return M, msg
+    global time_msg
+    if not time() - time_msg < 1:
+        time_msg = time()
+        if len(msg) <= 1900:
+            if M is None: M = await send_msg(ctx, msg)
+            else: await edit_msg(M, msg)
+        else:
+            msg = cut_msg(msg)
+            if trouver_bloc_code_cut(msg[0]) == False:
+                msg[0] += "```"
+                msg[1] = trouver_debut_bloc_code(msg[0])[1] + msg[1]
+            await edit_msg(M, msg[0])
+            msg = msg[1]
+            M = await send_msg(ctx, msg)
+    return M, msg
 
 async def stream_reponse(thread, metadata, headers):
     metadata["instructions"] = instructions+metadata["instructions"]
@@ -161,16 +160,15 @@ async def stream_reponse_file(ctx, thread, metadata, headers):
         await edit_msg(M, msg)
 
 async def new_stream(ctx, thread, reponse):
-    async with thread.typing():
-        msg = ""
-        M = await send_msg(thread, "Message en cours...")
-        chunk = ""
-        for chunk in reponse.iter_content(chunk_size=1024):
-            if chunk:
-                msg += str(chunk.decode('utf-8'))
-                M, msg = await send_to_discord(thread, msg, M)
-        msg += str(chunk.decode('utf-8'))
-        await edit_msg(M, msg)
+    msg = ""
+    M = await send_msg(thread, "Message en cours...")
+    chunk = ""
+    for chunk in reponse.iter_content(chunk_size=1024):
+        if chunk:
+            msg += str(chunk.decode('utf-8'))
+            M, msg = await send_to_discord(thread, msg, M)
+    msg += str(chunk.decode('utf-8'))
+    await edit_msg(M, msg)
 
 if __name__ == "__main__":
     bot.run(DISCORD_TOKEN)

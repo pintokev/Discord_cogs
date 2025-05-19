@@ -57,12 +57,14 @@ class image(commands.Cog):
         data = {'data': json.dumps(prompt_data)}
         headers = {'Authorization': settings.api_key}
 
-        response = requests.post(settings.images, headers=headers, data=data, files=files)
-        # print(response.text)
-        image_b64 = response.text  # extrait la chaîne base64
-        img_data = base64.b64decode(image_b64)
-        file = discord.File(BytesIO(img_data), filename='image.png')
-        await thread.send(file=file)
+
+        async with thread.typing():
+            response = requests.post(settings.images, headers=headers, data=data, files=files)
+            # print(response.text)
+            image_b64 = response.text  # extrait la chaîne base64
+            img_data = base64.b64decode(image_b64)
+            file = discord.File(BytesIO(img_data), filename='image.png')
+            await thread.send(file=file)
 
 
 async def setup(bot):
