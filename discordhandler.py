@@ -160,15 +160,16 @@ async def stream_reponse_file(ctx, thread, metadata, headers):
         await edit_msg(M, msg)
 
 async def new_stream(ctx, thread, reponse):
-    msg = ""
-    M = await send_msg(thread, "Message en cours...")
-    chunk = ""
-    for chunk in reponse.iter_content(chunk_size=1024):
-        if chunk:
-            msg += str(chunk.decode('utf-8'))
-            M, msg = await send_to_discord(thread, msg, M)
-    msg += str(chunk.decode('utf-8'))
-    await edit_msg(M, msg)
+    async with ctx.channel.typing():
+        msg = ""
+        M = await send_msg(thread, "Message en cours...")
+        chunk = ""
+        for chunk in reponse.iter_content(chunk_size=1024):
+            if chunk:
+                msg += str(chunk.decode('utf-8'))
+                M, msg = await send_to_discord(thread, msg, M)
+        msg += str(chunk.decode('utf-8'))
+        await edit_msg(M, msg)
 
 if __name__ == "__main__":
     bot.run(DISCORD_TOKEN)
