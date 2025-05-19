@@ -81,7 +81,7 @@ async def edit_msg(M, msg):
     copy_msg = msg
     if msg and msg!="":await M.edit(content=str(msg))
 async def send_to_discord(ctx, msg, M=None):
-    async with thread.typing():
+    async with ctx.channel.typing():
         global time_msg
         if not time() - time_msg < 1:
             time_msg = time()
