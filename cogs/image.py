@@ -7,6 +7,9 @@ import subprocess
 import os
 import io
 import json
+import base64
+import discord
+from io import BytesIO
 
 
 class image(commands.Cog):
@@ -26,67 +29,40 @@ class image(commands.Cog):
                 pass
         return None, message.strip()
 
-    async def edit_image(self, message, filename, thread):
-        import base64
-        prompt_data = {
-            "model": "gpt-image-1",
-            "prompt": str(message)
-        }
-
-        command = [
-            "curl",
-            "-X", "POST", settings.edit_images,
-            "-H", f"Authorization: {settings.api_key}",
-            "-F", f"data={json.dumps(prompt_data)}",
-            "-F", "file=@"+filename
-        ]
-
-        img_response = subprocess.run(command, capture_output=True)
-        image_b64 = img_response.stdout.decode().strip()
-        image_bytes = base64.b64decode(image_b64)
-        file = File(io.BytesIO(image_bytes), filename="image.png")
-        await thread.send(file=file)
-
-    async def create_image(self, message, thread):
-        import base64
-        prompt_data = {
-            "model": "gpt-image-1",
-            "quality": "high",  # ou autre valeur si besoin
-            "size": "1024x1024",  # adapte selon ce que tu veux
-            "prompt": str(message)
-            # "response_format":"b64_json"
-        }
-
-        command = [
-            "curl",
-            "-X", "POST", settings.images,
-            "-H", f"Authorization: {settings.api_key}",
-            "-F", f"data={json.dumps(prompt_data)}",
-            # "-F", "file=@"+file_name
-        ]
-        img_response = subprocess.run(command, capture_output=True)
-        img_url = img_response.stdout.decode().strip()
-        try:
-            response = requests.get(img_url)
-            image = response.content
-        except:
-            image = base64.b64decode(img_url)
-        file = File(io.BytesIO(image), filename="image.png")
-        await thread.send(file=file)
-
     @commands.command(name='image', aliases=["i"])
     async def image(self, ctx, *, message):
         thread = await createThread(ctx, "Voici l'image")
+
+        files = []
         if ctx.message.attachments:
+            prompt_data = {
+                "model": "gpt-image-1",
+                "prompt": str(message),
+                "id": str(thread.id)
+            }
             for attachment in ctx.message.attachments:
                 response = requests.get(attachment.url)
-                file_name = attachment.filename
-                with open(file_name, 'wb') as f:
-                    f.write(response.content)
-                await self.edit_image(message, file_name, thread)
-                break
+                file_bytes = io.BytesIO(response.content)
+                file_bytes.name = attachment.filename
+                files.append(('file', (attachment.filename, file_bytes)))
         else:
-            await self.create_image(message, thread)
+            prompt_data = {
+                "model": "gpt-image-1",
+                "quality": "high",  # ou autre valeur si besoin
+                "size": "1024x1024",  # adapte selon ce que tu veux
+                "prompt": str(message),
+                "id": str(thread.id)
+            }
+
+        data = {'data': json.dumps(prompt_data)}
+        headers = {'Authorization': settings.api_key}
+
+        response = requests.post(settings.images, headers=headers, data=data, files=files)
+        # print(response.text)
+        image_b64 = response.text  # extrait la chaîne base64
+        img_data = base64.b64decode(image_b64)
+        file = discord.File(BytesIO(img_data), filename='image.png')
+        await thread.send(file=file)
 
 
 async def setup(bot):
