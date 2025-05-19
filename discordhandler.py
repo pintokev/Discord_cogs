@@ -160,7 +160,7 @@ async def stream_reponse_file(ctx, thread, metadata, headers):
         await edit_msg(M, msg)
 
 async def new_stream(ctx, thread, reponse):
-    async with ctx.channel.typing():
+    async with thread.typing():
         msg = ""
         M = await send_msg(thread, "Message en cours...")
         chunk = ""
