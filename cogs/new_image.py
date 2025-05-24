@@ -12,7 +12,7 @@ import discord
 from io import BytesIO
 
 
-class image(commands.Cog):
+class new_image(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -29,8 +29,8 @@ class image(commands.Cog):
                 pass
         return None, message.strip()
 
-    @commands.command(name='image', aliases=["i"])
-    async def image(self, ctx, *, message):
+    @commands.command(name='new_image', aliases=["ni"])
+    async def new_image(self, ctx, *, message):
         thread = await createThread(ctx, "Voici l'image")
 
         files = []
@@ -68,4 +68,4 @@ class image(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(image(bot))
+    await bot.add_cog(new_image(bot))
