@@ -37,8 +37,7 @@ class new_image(commands.Cog):
         if ctx.message.attachments:
             prompt_data = {
                 "model": "gpt-image-1",
-                "prompt": str(message),
-                "id": str(thread.id)
+                "prompt": str(message)
             }
             for attachment in ctx.message.attachments:
                 response = requests.get(attachment.url)
@@ -50,8 +49,7 @@ class new_image(commands.Cog):
                 "model": "gpt-image-1",
                 "quality": "high",  # ou autre valeur si besoin
                 "size": "1024x1024",  # adapte selon ce  que tu veux
-                "prompt": str(message),
-                "id": str(thread.id)
+                "prompt": str(message)
             }
 
         data = {'data': json.dumps(prompt_data)}
