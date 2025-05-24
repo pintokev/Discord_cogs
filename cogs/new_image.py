@@ -12,7 +12,7 @@ import discord
 from io import BytesIO
 
 
-class new_image(commands.Cog):
+class image(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -29,32 +29,43 @@ class new_image(commands.Cog):
                 pass
         return None, message.strip()
 
-    @commands.command(name='new_image', aliases=["ni"])
+    @commands.command(name='image', aliases=["i"])
     async def image(self, ctx, *, message):
         thread = await createThread(ctx, "Voici l'image")
 
-        prompt_data = {
-            "model": "gpt-image-1",
-            "quality": "high",  # ou autre valeur si besoin
-            "size": "1024x1024",  # adapte selon ce que tu veux
-            "prompt": str(message),
-            "id": str(thread.id)
-        }
+        files = []
         if ctx.message.attachments:
-            async with thread.typing():
-                await thread.send("Cette commande n'accepte pas de pièces jointes, donc pas de modification d'image. Pour modifier une image, il faut utiliser !i")
-                return
+            prompt_data = {
+                "model": "gpt-image-1",
+                "prompt": str(message),
+                "id": str(thread.id)
+            }
+            for attachment in ctx.message.attachments:
+                response = requests.get(attachment.url)
+                file_bytes = io.BytesIO(response.content)
+                file_bytes.name = attachment.filename
+                files.append(('file', (attachment.filename, file_bytes)))
+        else:
+            prompt_data = {
+                "model": "gpt-image-1",
+                "quality": "high",  # ou autre valeur si besoin
+                "size": "1024x1024",  # adapte selon ce  que tu veux
+                "prompt": str(message),
+                "id": str(thread.id)
+            }
 
         data = {'data': json.dumps(prompt_data)}
         headers = {'Authorization': settings.api_key}
 
+
         async with thread.typing():
-            response = requests.post(settings.images, headers=headers, data=data)
-            image_b64 = response.text
+            response = requests.post(settings.new_images, headers=headers, data=data, files=files)
+            # print(response.text)
+            image_b64 = response.text  # extrait la chaîne base64
             img_data = base64.b64decode(image_b64)
             file = discord.File(BytesIO(img_data), filename='image.png')
             await thread.send(file=file)
 
 
 async def setup(bot):
-    await bot.add_cog(new_image(bot))
+    await bot.add_cog(image(bot))

@@ -49,7 +49,7 @@ class image(commands.Cog):
             prompt_data = {
                 "model": "gpt-image-1",
                 "quality": "high",  # ou autre valeur si besoin
-                "size": "1024x1024",  # adapte selon ce que tu veux
+                "size": "1024x1024",  # adapte selon ce  que tu veux
                 "prompt": str(message),
                 "id": str(thread.id)
             }
