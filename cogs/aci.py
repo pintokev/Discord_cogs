@@ -8,16 +8,16 @@ import subprocess
 import os
 
 
-class Asf(commands.Cog):
+class Aci(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='asf', aliases=["sf"])
+    @commands.command(name='aci', aliases=["ci"])
     async def asf(self, ctx):
         thread = await createThread(ctx, "Voici les fichiers")
         command = [
             "curl",
-            "-X", "POST", settings.file_search,
+            "-X", "POST", settings.code_interpreter,
             "-H", f"Authorization: {settings.api_key}",
             "-F", f"data={{\"id\":\"{str(thread.id)}\", \"model\":\"{config.settings.model}\"}}",
         ]
@@ -43,4 +43,4 @@ class Asf(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(Asf(bot))
+    await bot.add_cog(Aci(bot))

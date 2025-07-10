@@ -7,6 +7,7 @@ stream = f'http://localhost:{PORT}/stream'
 instructions_url = f'http://localhost:{PORT}/instructions'
 clear = f'http://localhost:{PORT}/clear'
 file_search = f'http://localhost:{PORT}/file-search'
+code_interpreter = f'http://localhost:{PORT}/code-interpreter'
 remove_historique = f'http://localhost:{PORT}/remove_historique'
 images = f"http://localhost:{PORT}/images"
 new_images = f"http://localhost:{PORT}/new_images"
