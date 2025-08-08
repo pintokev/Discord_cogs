@@ -14,7 +14,7 @@ class O3_High(commands.Cog):
         self.time_msg = time()
         self.temp_cut = 1
 
-    @commands.command(name='o3_high', aliases=["oh"])
+    @commands.command(name='o3_high', aliases=["o"])
     async def o3_high(self, ctx, *, message):
         thread = await createThread(ctx, message)
         headers = {
