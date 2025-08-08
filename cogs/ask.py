@@ -31,7 +31,7 @@ class Ask(commands.Cog):
             "presence_penalty": settings.presence_penalty,
             "max_prompt_token": settings.max_prompt_token,
             "max_completion_token": settings.max_completion_token,
-            "instructions": settings.instructions
+            "instructions": settings.instructions,
             "reasoning":{"effort":"minimal"}
         }
 
