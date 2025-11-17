@@ -7,14 +7,14 @@ from config import settings
 
 
 
-class Codex(commands.Cog):
+class Test(commands.Cog):
     def init(self, bot):
         self.bot = bot
         self.url = settings.stream
         self.time_msg = time()
         self.temp_cut = 1
 
-    @commands.command(name='codex', aliases=["d"])
+    @commands.command(name='test', aliases=["t"])
     async def codex(self, ctx, *, message):
         thread = await createThread(ctx, message)
         headers = {
@@ -24,7 +24,7 @@ class Codex(commands.Cog):
         data = {
             "content": str(message),
             "id": str(thread.id),
-            "model": settings.model_codex,
+            "model": settings.model_test,
 #            "temperature": settings.temperature,
 #            "top_p": settings.top_p,
             "frequency_penalty": settings.frequency_penalty,
@@ -32,7 +32,7 @@ class Codex(commands.Cog):
             "max_prompt_token": settings.max_prompt_token,
             "max_completion_token": settings.max_completion_token,
             "instructions": settings.instructions,
-            "reasonning": {"effort": "high"}
+            "reasonning": {"effort": "high"},
         }
 
         if ctx.message.attachments:
@@ -48,4 +48,4 @@ class Codex(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(Codex(bot))
+    await bot.add_cog(Test(bot))
