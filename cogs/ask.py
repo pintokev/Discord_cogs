@@ -32,7 +32,7 @@ class Ask(commands.Cog):
             "max_prompt_token": settings.max_prompt_token,
             "max_completion_token": settings.max_completion_token,
             "instructions": settings.instructions,
-            "text":{"verbosity":"low"}
+            "text":{"verbosity":"high"}
         }
 
         if ctx.message.attachments:
