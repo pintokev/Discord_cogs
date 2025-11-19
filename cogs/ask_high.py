@@ -7,15 +7,15 @@ from config import settings
 
 
 
-class Ask(commands.Cog):
+class AskHigh(commands.Cog):
     def init(self, bot):
         self.bot = bot
         self.url = settings.stream
         self.time_msg = time()
         self.temp_cut = 1
 
-    @commands.command(name='ask', aliases=["a"])
-    async def ask(self, ctx, *, message):
+    @commands.command(name='ask_high', aliases=["h"])
+    async def ask_high(self, ctx, *, message):
         thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",
@@ -31,7 +31,8 @@ class Ask(commands.Cog):
             "presence_penalty": settings.presence_penalty,
             "max_prompt_token": settings.max_prompt_token,
             "max_completion_token": settings.max_completion_token,
-            "instructions": settings.instructions
+            "instructions": settings.instructions,
+            "text":{"verbosity":"high"},
         }
 
         if ctx.message.attachments:
@@ -47,4 +48,4 @@ class Ask(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(Ask(bot))
+    await bot.add_cog(AskHigh(bot))
