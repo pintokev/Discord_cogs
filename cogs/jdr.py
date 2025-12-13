@@ -37,6 +37,7 @@ class Jdr(commands.Cog):
             "Avant de commencer une partie, tu as besoin d'un nom de la campagne que l'utilisateur devra te donner\n"
             "Pour que les joueurs ait une liberté total, ne propose pas plusieurs possibilité à la situation, laisse les imaginer\n"
             "Tu ne dois en aucun cas, indiquer ce que peux faire les joueurs, par exemple à la fin ne dis pas Tu peux faire ceci, ou cela etc..\n"
+            "Veille à ce que les actiions des utilisateurs ne soient pas irréalisable et ne détruisent pas le du scénario de manière soudaine\n"
             "Pour chaque action que doit faire l'utilisateur, tu devras lancer 1d20 et checker avec ses compétences\n"
             "Par exemple pour une action physique (déplacer un rocher), tu devras lancer 1d20 et si le résultat est supérieur à la stats physique c'est un echec, si le résultat est inférieur ou égale c'est une réussite\n"
             "Les echecs critiques (20) et les succès critiques (1) sont présent, tu devras donc faire l'action avec une grosse réussite ou un gros echecs.\n"
