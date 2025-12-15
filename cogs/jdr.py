@@ -29,24 +29,7 @@ class Jdr(commands.Cog):
                 "require_approval": "never"
             }
         ]
-        if flag :
-            data = {
-                "content": str("Appelle la fonctio get_system_msg du MCP server. Ne mets aucun texte avant ni après, envoi le retour de la fonction brut seulement"),
-                "id": str(thread.id),
-                "model": settings.model,
-                "frequency_penalty": settings.frequency_penalty,
-                "presence_penalty": settings.presence_penalty,
-                "max_prompt_token": settings.max_prompt_token,
-                "max_completion_token": settings.max_completion_token,
-                "tools": tools,
-                "tool_choices": "required"
-            }
-            response = requests.post(settings.stream, headers=headers, json=data)
-            with open("system_msg.txt", "w") as file:
-                file.write(str(response.text))
 
-        with open ("system_msg.txt", "r") as file:
-            system_msg = file.read()
         data = {
             "content": str(message),
             "id": str(thread.id),
@@ -55,7 +38,7 @@ class Jdr(commands.Cog):
             "presence_penalty": settings.presence_penalty,
             "max_prompt_token": settings.max_prompt_token,
             "max_completion_token": settings.max_completion_token,
-            "instructions": system_msg,
+            "instructions": settings.system_jdr_msg,
             "tools":tools
         }
 

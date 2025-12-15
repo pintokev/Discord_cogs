@@ -27,15 +27,11 @@ async def on_ready():
     print(f'Logged in as {bot.user.name}')
     await load_cogs(bot)
 
-async def createThread(ctx, message, jdr=False):
-    flag = False
-    if ctx.channel.type != discord.ChannelType.public_thread:
-        thread = await ctx.message.create_thread(name="prompt " + str(message[0:92]), auto_archive_duration=4320, reason="PasTesOignons")
-        flag = True
+async def createThread(ctx, message):
+    if ctx.channel.type != discord.ChannelType.public_thread: thread = await ctx.message.create_thread(name=str(message[0:92]), auto_archive_duration=4320, reason="PasTesOignons")
     else: thread = ctx.channel
     clear_thread_prompt(ctx.guild)
-    if jdr: return thread, flag
-    else: return thread
+    return thread
 
 def clear_thread_prompt(guild):
     threads = guild.threads
