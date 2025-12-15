@@ -7,42 +7,30 @@ from config import settings
 
 
 
-class Jdr(commands.Cog):
+class O3_xHigh(commands.Cog):
     def init(self, bot):
         self.bot = bot
         self.url = settings.stream
         self.time_msg = time()
         self.temp_cut = 1
 
-    @commands.command(name='jdr', aliases=["jd"])
-    async def jdr(self, ctx, *, message):
+    @commands.command(name='o3_xhigh', aliases=["ox"])
+    async def o3_xhigh(self, ctx, *, message):
         thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",
             # "Authorization": settings.api_key
         }
-        tools = [
-            {
-                "type": "mcp",
-                "server_label": settings.SERVER_LABEL,
-                "server_url": settings.ADRESSE_SERVEUR_MCP,
-                "server_description": settings.SERVER_DESCRIPTION,
-                "require_approval": "never"
-            }
-        ]
-
         data = {
             "content": str(message),
             "id": str(thread.id),
-            "model": settings.model,
+            "model": settings.model_reasoning,
             "frequency_penalty": settings.frequency_penalty,
             "presence_penalty": settings.presence_penalty,
             "max_prompt_token": settings.max_prompt_token,
             "max_completion_token": settings.max_completion_token,
-            "instructions": settings.system_jdr_msg,
-            "tools":tools,
-            "tool_ressource":"required",
-            "reasoning":{"effort": "low"}
+            "instructions": settings.instructions,
+            "reasonning":{"effort":"xhigh"}
         }
 
         if ctx.message.attachments:
@@ -51,9 +39,13 @@ class Jdr(commands.Cog):
                 url_file_list.append(attachment.url)
             data["image_url"] = url_file_list
         # print(data)
+
         async with thread.typing():
             response = requests.post(settings.stream, headers=headers, json=data, stream=True)
+
             await new_stream(ctx, thread, response)
 
+
+
 async def setup(bot):
-    await bot.add_cog(Jdr(bot))
+    await bot.add_cog(O3_xHigh(bot))
