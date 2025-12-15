@@ -14,7 +14,7 @@ class Jdr(commands.Cog):
         self.time_msg = time()
         self.temp_cut = 1
 
-    @commands.command(name='jdr', aliases=["jd"])
+    @commands.command(name='jdr', aliases=["j"])
     async def jdr(self, ctx, *, message):
         """Permet de lancer une session de JDR avec chatGPT. Utilise un système de sauvegarde pour avoir des données correctes et réelles"""
         thread = await createThread(ctx, message)
