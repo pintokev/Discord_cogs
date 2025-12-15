@@ -16,7 +16,7 @@ class Jdr(commands.Cog):
 
     @commands.command(name='jdr', aliases=["j"])
     async def jdr(self, ctx, *, message):
-        thread, flag = await createThread(ctx, message)
+        thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",
             # "Authorization": settings.api_key
