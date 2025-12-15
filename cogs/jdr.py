@@ -8,7 +8,7 @@ from config import settings
 
 
 class Jdr(commands.Cog):
-    def init(self, bot):
+    def __init__(self, bot):
         self.bot = bot
         self.url = settings.stream
         self.time_msg = time()
