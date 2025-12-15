@@ -13,7 +13,7 @@ class Jdr(commands.Cog):
         self.url = settings.stream
         self.time_msg = time()
         self.temp_cut = 1
-    @commands.command(name='jdr', aliases=["jd"])
+    @commands.command(name='jdr', aliases=["j"])
     async def jdr(self, ctx, *, message):
         thread, flag = await createThread(ctx, message, jdr=True)
         headers = {
