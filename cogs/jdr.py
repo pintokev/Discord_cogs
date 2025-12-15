@@ -13,9 +13,10 @@ class Jdr(commands.Cog):
         self.url = settings.stream
         self.time_msg = time()
         self.temp_cut = 1
+
     @commands.command(name='jdr', aliases=["j"])
     async def jdr(self, ctx, *, message):
-        thread, flag = await createThread(ctx, message, jdr=True)
+        thread, flag = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",
             # "Authorization": settings.api_key
@@ -51,8 +52,6 @@ class Jdr(commands.Cog):
         async with thread.typing():
             response = requests.post(settings.stream, headers=headers, json=data, stream=True)
             await new_stream(ctx, thread, response)
-
-
 
 async def setup(bot):
     await bot.add_cog(Jdr(bot))
