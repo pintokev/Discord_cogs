@@ -4,6 +4,7 @@ class Hello(commands.Cog):
         self.bot = bot
     @commands.command(name='hello')
     async def hello(self, ctx):
+        """Renvoie un Hello!"""
         await ctx.send('Hello!')
 async def setup(bot):
     await bot.add_cog(Hello(bot))

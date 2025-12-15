@@ -11,6 +11,7 @@ class Contexte(commands.Cog):
 
     @commands.command(name='contexte', aliases=["c"])
     async def contexte(self, ctx, *, message):
+        """Modifie le contexte de la session en cours (ça écrase le contexte actuel)"""
         thread = await createThread(ctx, message)
         metadata = {
             "instruction": str(message),

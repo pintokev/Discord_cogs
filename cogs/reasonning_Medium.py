@@ -7,15 +7,16 @@ from config import settings
 
 
 
-class O3_Medium(commands.Cog):
+class reasonning_Medium(commands.Cog):
     def init(self, bot):
         self.bot = bot
         self.url = settings.stream
         self.time_msg = time()
         self.temp_cut = 1
 
-    @commands.command(name='o3_medium', aliases=["om"])
-    async def o3_medium(self, ctx, *, message):
+    @commands.command(name='reasonning_medium', aliases=["om"])
+    async def reasonning_medium(self, ctx, *, message):
+        """Un des modèles de réflexion profond de GPT, il s'agit de la version medium (parmi [low, medium, high, xhigh])"""
         thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",
@@ -48,4 +49,4 @@ class O3_Medium(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(O3_Medium(bot))
+    await bot.add_cog(reasonning_Medium(bot))

@@ -11,6 +11,7 @@ class Cclear(commands.Cog):
 
     @commands.command(name='cclear', aliases=["cc"])
     async def cclear(self, ctx):
+        """Supprime l'intégralité de la session, le contexte, l'historique, les images. Le thread est gardé côté discord"""
         thread = await createThread(ctx, "Thread créé")
         metadata = {
             "id": str(thread.id)

@@ -14,6 +14,7 @@ class Aci(commands.Cog):
 
     @commands.command(name='aci', aliases=["ci"])
     async def asf(self, ctx):
+        """Envoie des fichier à openai pour que gpt puisse recréer un envirpnnement virtuel sous python, coder et tester le code en utilisant les fichiers en pièces jointes"""
         thread = await createThread(ctx, "Voici les fichiers")
         command = [
             "curl",

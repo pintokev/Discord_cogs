@@ -16,6 +16,7 @@ class AskHigh(commands.Cog):
 
     @commands.command(name='ask_high', aliases=["h"])
     async def ask_high(self, ctx, *, message):
+        """Fonction de base qui permet d'envoyer un message à l'API d'openai GPT afin d'obtenir une réponse (chatGPT) ==> configuré pour beaucoup parler..."""
         thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",

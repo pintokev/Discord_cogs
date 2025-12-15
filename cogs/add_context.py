@@ -11,6 +11,7 @@ class Add_Contexte(commands.Cog):
 
     @commands.command(name='add_contexte', aliases=["ac"])
     async def add_contexte(self, ctx, *, message):
+        """Permet d'ajouter du texte au contexte de la conversation"""
         thread = await createThread(ctx, message)
         metadata = {
             "instruction": str(message),

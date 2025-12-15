@@ -11,6 +11,7 @@ class Remove_Historique(commands.Cog):
 
     @commands.command(name='remove_historique', aliases=["rh"])
     async def remove_historique(self, ctx):
+        """Supprime seulement l'historique de conversation côté GPT tout en gardant le contexte"""
         thread = await createThread(ctx, "Thread créé")
         metadata = {
             "id": str(thread.id)

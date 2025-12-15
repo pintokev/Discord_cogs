@@ -31,6 +31,7 @@ class image(commands.Cog):
 
     @commands.command(name='image', aliases=["i"])
     async def image(self, ctx, *, message):
+        """Génère une image avec l'api d'openai. Garde l'historique de conversation et la dernière image. Utile pour modifier la dernière image générée"""
         thread = await createThread(ctx, "Voici l'image")
 
         files = []

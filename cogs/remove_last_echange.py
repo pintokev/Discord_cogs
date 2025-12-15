@@ -11,6 +11,7 @@ class Remove_Last_Echange(commands.Cog):
 
     @commands.command(name='remove_last_echange', aliases=["rl"])
     async def remove_last_echange(self, ctx):
+        """Supprime le dernier échange de la discussion (une demande utilisateur + réponse GPT). Cette commande peut être spammé pour supprimer plusieurs échanges"""
         thread = await createThread(ctx, "Thread créé")
         metadata = {
             "id": str(thread.id)

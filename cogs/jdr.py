@@ -16,6 +16,7 @@ class Jdr(commands.Cog):
 
     @commands.command(name='jdr', aliases=["jd"])
     async def jdr(self, ctx, *, message):
+        """Permet de lancer une session de JDR avec chatGPT. Utilise un système de sauvegarde pour avoir des données correctes et réelles"""
         thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",

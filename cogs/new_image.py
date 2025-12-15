@@ -31,6 +31,7 @@ class new_image(commands.Cog):
 
     @commands.command(name='new_image', aliases=["ni"])
     async def new_image(self, ctx, *, message):
+        """Génère une image avec l'api d'openai GPT. Ne garde pas l'historique ni la dernière image, utilile pour créer une image à la volée"""
         thread = await createThread(ctx, "Voici l'image")
 
         files = []

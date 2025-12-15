@@ -7,15 +7,16 @@ from config import settings
 
 
 
-class O3_High(commands.Cog):
+class Reasonning_High(commands.Cog):
     def init(self, bot):
         self.bot = bot
         self.url = settings.stream
         self.time_msg = time()
         self.temp_cut = 1
 
-    @commands.command(name='o3_high', aliases=["oh"])
-    async def o3_high(self, ctx, *, message):
+    @commands.command(name='reasonning_high', aliases=["oh"])
+    async def reasonning_high(self, ctx, *, message):
+        """Un des modèles de réflexion profond de GPT, il s'agit de la version high (parmi [low, medium, high, xhigh])"""
         thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",
@@ -48,4 +49,4 @@ class O3_High(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(O3_High(bot))
+    await bot.add_cog(Reasonning_High(bot))

@@ -14,6 +14,7 @@ class Asf(commands.Cog):
 
     @commands.command(name='asf', aliases=["sf"])
     async def asf(self, ctx):
+        """Envoie des fichiers à openai pour << étendre >> sa base de connaissance"""
         thread = await createThread(ctx, "Voici les fichiers")
         command = [
             "curl",

@@ -16,6 +16,7 @@ class Ask(commands.Cog):
 
     @commands.command(name='ask', aliases=["a"])
     async def ask(self, ctx, *, message):
+        """Fonction de base qui permet d'envoyer un message à l'API d'openai GPT afin d'obtenir une réponse (chatGPT)"""
         thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",

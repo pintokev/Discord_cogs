@@ -11,6 +11,7 @@ class Remove_Contexte(commands.Cog):
 
     @commands.command(name='remove_contexte', aliases=["rc"])
     async def remove_contexte(self, ctx):
+        """Supprime le contexte de la session sans en rajouter par dessus"""
         thread = await createThread(ctx, "Thread créé")
         metadata = {
             "id": str(thread.id)

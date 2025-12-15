@@ -16,6 +16,7 @@ class Codex(commands.Cog):
 
     @commands.command(name='codex', aliases=["d"])
     async def codex(self, ctx, *, message):
+        """Permet d'interroger le modèle codex d'openai, adapté au code et disposant d'une longue fenêtre de contexte (il se souvient de plus de choses)"""
         thread = await createThread(ctx, message)
         headers = {
             "Content-Type": "application/json",
