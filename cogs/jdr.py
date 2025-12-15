@@ -44,32 +44,30 @@ class Jdr(commands.Cog):
             response = requests.post(settings.stream, headers=headers, json=data)
             with open("system_msg.txt", "w") as file:
                 file.write(str(response.text))
-            flag = False
-        if not flag:
-            with open ("system_msg.txt", "r") as file:
-                system_msg = file.read()
 
-            data = {
-                "content": str(message),
-                "id": str(thread.id),
-                "model": settings.model,
-                "frequency_penalty": settings.frequency_penalty,
-                "presence_penalty": settings.presence_penalty,
-                "max_prompt_token": settings.max_prompt_token,
-                "max_completion_token": settings.max_completion_token,
-                "instructions": system_msg,
-                "tools":tools
-            }
+        with open ("system_msg.txt", "r") as file:
+            system_msg = file.read()
+        data = {
+            "content": str(message),
+            "id": str(thread.id),
+            "model": settings.model,
+            "frequency_penalty": settings.frequency_penalty,
+            "presence_penalty": settings.presence_penalty,
+            "max_prompt_token": settings.max_prompt_token,
+            "max_completion_token": settings.max_completion_token,
+            "instructions": system_msg,
+            "tools":tools
+        }
 
-            if ctx.message.attachments:
-                url_file_list = []
-                for attachment in ctx.message.attachments:
-                    url_file_list.append(attachment.url)
-                data["image_url"] = url_file_list
-            # print(data)
-            async with thread.typing():
-                response = requests.post(settings.stream, headers=headers, json=data, stream=True)
-                await new_stream(ctx, thread, response)
+        if ctx.message.attachments:
+            url_file_list = []
+            for attachment in ctx.message.attachments:
+                url_file_list.append(attachment.url)
+            data["image_url"] = url_file_list
+        # print(data)
+        async with thread.typing():
+            response = requests.post(settings.stream, headers=headers, json=data, stream=True)
+            await new_stream(ctx, thread, response)
 
 
 
