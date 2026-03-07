@@ -1,12 +1,8 @@
 from discord.ext import commands
-from discordhandler import createThread, stream_reponse_file
-from discord import File
+from discordhandler import createThread
 from config import settings
 import requests
-import subprocess
-import os
 import io
-import json
 import base64
 import discord
 from io import BytesIO
@@ -16,56 +12,99 @@ class image(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def split_json_and_text(self, message):
-        import re
-        match = re.match(r'(\{.*\})(.*)', message, re.DOTALL)
-        if match:
-            json_part = match.group(1).strip()
-            text_part = match.group(2).strip()
-            try:
-                data = json.loads(json_part)
-                return data, text_part
-            except Exception:
-                pass
-        return None, message.strip()
-
-    @commands.command(name='image', aliases=["i"])
+    @commands.command(name="image", aliases=["i"])
     async def image(self, ctx, *, message):
-        """Génère une image avec l'api d'openai. Garde l'historique de conversation et la dernière image. Utile pour modifier la dernière image générée"""
         thread = await createThread(ctx, "Voici l'image")
 
         files = []
-        if ctx.message.attachments:
-            prompt_data = {
-                "model": "gpt-image-1",
-                "prompt": str(message),
-                "id": str(thread.id)
-            }
-            for attachment in ctx.message.attachments:
-                response = requests.get(attachment.url)
-                file_bytes = io.BytesIO(response.content)
-                file_bytes.name = attachment.filename
-                files.append(('file', (attachment.filename, file_bytes)))
-        else:
-            prompt_data = {
-                "model": "gpt-image-1",
-                "quality": "high",  # ou autre valeur si besoin
-                "size": "1024x1024",  # adapte selon ce  que tu veux
-                "prompt": str(message),
-                "id": str(thread.id)
-            }
+        opened_files = []
 
-        data = {'data': json.dumps(prompt_data)}
-        headers = {'Authorization': settings.api_key}
+        prompt_data = {
+            "message": str(message),
+            "model": settings.model_gemini,
+            "aspect_ratio": settings.image_aspect_ratio,
+            "image_size": settings.image_size,
+            "thinking_level": settings.image_thinking_level,
+            "file_prefix": f"image_{thread.id}",
+            "max_input_images": settings.image_max_input_images,
+            "id": str(thread.id),
+        }
 
+        try:
+            if ctx.message.attachments:
+                for attachment in ctx.message.attachments:
+                    response = requests.get(attachment.url, timeout=30)
+                    response.raise_for_status()
 
-        async with thread.typing():
-            response = requests.post(settings.images, headers=headers, data=data, files=files)
-            # print(response.text)
-            image_b64 = response.text  # extrait la chaîne base64
-            img_data = base64.b64decode(image_b64)
-            file = discord.File(BytesIO(img_data), filename='image.png')
-            await thread.send(file=file)
+                    file_bytes = io.BytesIO(response.content)
+                    file_bytes.name = attachment.filename
+                    opened_files.append(file_bytes)
+
+                    content_type = attachment.content_type or "application/octet-stream"
+                    files.append(("files", (attachment.filename, file_bytes, content_type)))
+
+            async with thread.typing():
+                response = requests.post(
+                    settings.images,
+                    data=prompt_data,
+                    files=files if files else None,
+                    timeout=180,
+                )
+
+            if response.status_code != 200:
+                await thread.send(f"Erreur backend ({response.status_code}) : {response.text[:1500]}")
+                return
+
+            payload = response.json()
+
+            if not payload.get("success"):
+                await thread.send(payload.get("error", "Erreur inconnue côté backend."))
+                return
+
+            if payload.get("text"):
+                await thread.send(payload["text"])
+
+            returned_images = payload.get("images", [])
+            if not returned_images:
+                await thread.send("Aucune image générée.")
+                return
+
+            discord_files = []
+            for img in returned_images:
+                b64_data = img.get("b64_data")
+                filename = img.get("filename", "image.png")
+
+                if not b64_data:
+                    continue
+
+                image_bytes = base64.b64decode(b64_data)
+                discord_files.append(
+                    discord.File(
+                        fp=BytesIO(image_bytes),
+                        filename=filename,
+                    )
+                )
+
+            if not discord_files:
+                await thread.send("Aucune image exploitable reçue.")
+                return
+
+            await thread.send(files=discord_files)
+
+        except requests.Timeout:
+            await thread.send("Le backend Gemini a mis trop de temps à répondre.")
+        except requests.RequestException as e:
+            await thread.send(f"Erreur réseau/backend : {e}")
+        except ValueError:
+            await thread.send("Réponse backend invalide.")
+        except Exception as e:
+            await thread.send(f"Erreur inattendue : {e}")
+        finally:
+            for file_obj in opened_files:
+                try:
+                    file_obj.close()
+                except Exception:
+                    pass
 
 
 async def setup(bot):
