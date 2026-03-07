@@ -12,7 +12,7 @@ class new_image(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="new_image", aliases=["i"])
+    @commands.command(name="new_image", aliases=["ni"])
     async def new_image(self, ctx, *, message):
         thread = await createThread(ctx, "Voici l'image")
 
