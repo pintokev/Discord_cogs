@@ -46,7 +46,7 @@ class Help(commands.Cog):
             "presence_penalty": settings.presence_penalty,
             "max_prompt_token": settings.max_prompt_token,
             "max_completion_token": settings.max_completion_token,
-            "instructions": "Tu devras reformatter la liste de commande discord en indiquant la commande en gras et ce qu'elle fait, range les par catégorie tout en les triant, Formatte la réponse en stylke documentation Discord"
+            "instructions": "Tu devras reformatter la liste de commande discord en indiquant la commande en gras et ce qu'elle fait, range les par catégorie tout en les triant, Formatte la réponse en stylke documentation Discord, chaque catégorie devra être entre ``` ```"
         }
         # print(data)
         response = requests.post(settings.stream, headers=headers, json=data, stream=True)
