@@ -14,6 +14,7 @@ class image(commands.Cog):
 
     @commands.command(name="image", aliases=["i"])
     async def image(self, ctx, *, message):
+        '''Génère une image avec le dernier modèle de Gemini. Garde la dernière image généré en historique'''
         thread = await createThread(ctx, "Voici l'image")
 
         files = []
