@@ -12,7 +12,7 @@ class new_image(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="new_image", aliases=["ni"])
+    @commands.command(name="new_image", aliases=["ni", "nil"])
     async def new_image(self, ctx, *, message):
         '''Génère une image avec le dernier modèle de Gemini. Ne garde pas d'historique'''
         thread = await createThread(ctx, "Voici l'image")
@@ -24,7 +24,7 @@ class new_image(commands.Cog):
             "message": str(message),
             "model": settings.model_gemini,
             "aspect_ratio": settings.image_aspect_ratio,
-            "image_size": settings.image_size,
+            "image_size": settings.image_size_low,
             "thinking_level": settings.image_thinking_level,
             "file_prefix": f"image_{thread.id}",
             "max_input_images": settings.image_max_input_images,
