@@ -12,8 +12,8 @@ class new_image(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="new_image", aliases=["ni", "nil"])
-    async def new_image(self, ctx, *, message):
+    @commands.command(name="new_image_low", aliases=["ni", "nil"])
+    async def new_image_low(self, ctx, *, message):
         '''Génère une image avec le dernier modèle de Gemini. Ne garde pas d'historique'''
         thread = await createThread(ctx, "Voici l'image")
 
@@ -109,4 +109,4 @@ class new_image(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(new_image(bot))
+    await bot.add_cog(new_image_low(bot))
