@@ -8,7 +8,7 @@ import discord
 from io import BytesIO
 
 
-class new_image(commands.Cog):
+class new_image_low(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
