@@ -1,0 +1,23 @@
+import requests
+from src.discordhandler import createThread
+from discord.ext import commands
+from src.config import settings
+
+
+class Cclear(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+
+    @commands.command(name='cclear', aliases=["cc"])
+    async def cclear(self, ctx):
+        """Supprime l'intégralité de la session, le contexte, l'historique, les images. Le thread est gardé côté discord"""
+        thread = await createThread(ctx, "Thread créé")
+        metadata = {
+            "id": str(thread.id)
+        }
+        rep = requests.post(str(settings.clear), json=metadata)
+        await thread.send(rep.text)
+
+async def setup(bot):
+    await bot.add_cog(Cclear(bot))
