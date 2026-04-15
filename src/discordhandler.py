@@ -164,7 +164,7 @@ async def new_stream(ctx, thread, reponse):
     msg = ""
     M = await send_msg(thread, "Message en cours...")
     chunk = ""
-    for chunk in reponse.iter_content(chunk_size=None):
+    for chunk in reponse.iter_content(chunk_size=1024):
         if chunk:
             msg += str(chunk.decode('utf-8'))
             M, msg = await send_to_discord(thread, msg, M)

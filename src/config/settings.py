@@ -31,7 +31,7 @@ temperature = 0.9
 top_p = 1
 frequency_penalty = 0.3
 presence_penalty = 0.2
-max_prompt_token = 10000
-max_completion_token = 10000
+max_prompt_token = 4000
+max_completion_token = 4000
 
 DISCORD_TOKEN = os.environ.get("tokenDiscord")
