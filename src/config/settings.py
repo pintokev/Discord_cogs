@@ -5,6 +5,7 @@ GEMINI_BASE_URL = os.environ.get("GEMINI_BASE_URL", "http://localhost:5000")
 
 stream = f"{GPT_BASE_URL}/stream"
 instructions_url = f"{GPT_BASE_URL}/instructions"
+get_instructions_url = f"{GPT_BASE_URL}/get-instructions"
 clear = f"{GPT_BASE_URL}/clear"
 file_search = f"{GPT_BASE_URL}/file-search"
 code_interpreter = f"{GPT_BASE_URL}/code-interpreter"
