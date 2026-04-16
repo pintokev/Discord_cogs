@@ -12,7 +12,7 @@ class Get_Contexte(commands.Cog):
 
     @commands.command(name='get_contexte', aliases=["gc"])
     async def get_contexte(self, ctx):
-        """Permet d'ajouter du texte au contexte de la conversation"""
+        """Permet de retoutner le contexte du thread en cours"""
         maybeThread = ctx.channel
         if maybeThread.type != discord.ChannelType.public_thread:
             await maybeThread.send("A lancer dans un threead")
