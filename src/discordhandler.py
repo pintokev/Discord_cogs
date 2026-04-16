@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 import os
 from json import dumps
@@ -79,8 +80,22 @@ def trouver_fin_bloc_code(message):
 def trouver_bloc_code_cut(message): return trouver_debut_bloc_code(message)[0] == trouver_fin_bloc_code(message)
 async def send_msg(ctx, msg): return await ctx.send(content=str(msg))
 async def edit_msg(M, msg):
-    copy_msg = msg
     if msg and msg!="":await M.edit(content=str(msg))
+
+async def stream_reponse(thread, metadata, headers):
+    metadata["instructions"] = instructions+metadata["instructions"]
+    async with aiohttp.ClientSession() as session:
+        msg = ""
+        M = await send_msg(thread, "Message en cours...")
+        async with session.post(settings.stream, json=metadata, headers=headers) as response:
+            # print(metadata)
+            async for chunk in response.content.iter_chunked(1024):
+                # print(chunk.decode('utf-8'), end="", flush=True)
+                msg += chunk.decode('utf-8')
+                M, msg = await send_to_discord(thread, msg, M)
+        await edit_msg(M, msg)
+
+
 async def send_to_discord(ctx, msg, M=None):
     global time_msg
     if not time() - time_msg < 1:
@@ -98,48 +113,7 @@ async def send_to_discord(ctx, msg, M=None):
             M = await send_msg(ctx, msg)
     return M, msg
 
-async def stream_reponse(thread, metadata, headers):
-    metadata["instructions"] = instructions+metadata["instructions"]
-    async with aiohttp.ClientSession() as session:
-        msg = ""
-        M = await send_msg(thread, "Message en cours...")
-        async with session.post(settings.stream, json=metadata, headers=headers) as response:
-            # print(metadata)
-            async for chunk in response.content.iter_chunked(1024):
-                # print(chunk.decode('utf-8'), end="", flush=True)
-                msg += chunk.decode('utf-8')
-                M, msg = await send_to_discord(thread, msg, M)
-        await edit_msg(M, msg)
 
-'''
-async def stream_reponse_file(ctx, thread, metadata):
-    metadata["instructions"] = instructions+metadata["instructions"]
-    form_data = aiohttp.FormData()
-    form_data.add_field('metadata', dumps(metadata), content_type="multipart/form-data")
-
-    async with aiohttp.ClientSession() as session:
-        if ctx.message.attachments:
-            for attachment in ctx.message.attachments:
-                file_data = await attachment.read()
-                form_data.add_field('file', file_data, filename=attachment.filename)
-
-        msg = ""
-        M = await send_msg(thread, "Message en cours...")
-
-        async with session.post(settings.url, data=form_data) as response:
-            async for chunk in response.content.iter_chunked(1024):
-                msg += chunk.decode('utf-8')
-                M, msg = await send_to_discord(thread, msg, M)
-
-                # Génère la voix en utilisant Coqui TTS
-                tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=True, gpu=True)
-                tts.tts_to_file(text=msg, file_path="output.wav")
-
-                # Lis le fichier audio généré
-                playsound("output.wav")
-
-        await edit_msg(M, msg)
-'''
 async def stream_reponse_file(ctx, thread, metadata, headers):
     if "instructions" in metadata: metadata["instructions"] = instructions+metadata["instructions"]
     else: metadata["instructions"] = instructions
@@ -163,12 +137,10 @@ async def stream_reponse_file(ctx, thread, metadata, headers):
 async def new_stream(ctx, thread, reponse):
     msg = ""
     M = await send_msg(thread, "Message en cours...")
-    chunk = ""
     for chunk in reponse.iter_content(chunk_size=1024):
         if chunk:
             msg += str(chunk.decode('utf-8'))
             M, msg = await send_to_discord(thread, msg, M)
-    msg += str(chunk.decode('utf-8'))
     await edit_msg(M, msg)
 
 if __name__ == "__main__":
