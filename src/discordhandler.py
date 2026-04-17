@@ -144,6 +144,4 @@ async def new_stream(ctx, thread, reponse):
     await edit_msg(M, msg)
 
 if __name__ == "__main__":
-    import os
-    DISCORD_TOKEN = os.environ.get("tokenDiscord")
-    bot.run(DISCORD_TOKEN)
+    bot.run(settings.DISCORD_TOKEN)

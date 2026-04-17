@@ -1,4 +1,5 @@
 import os
+from src.config.get_secrets import get_config
 
 GPT_BASE_URL = os.environ.get("GPT_BASE_URL", "http://localhost:2000")
 GEMINI_BASE_URL = os.environ.get("GEMINI_BASE_URL", "http://localhost:5000")
@@ -35,4 +36,6 @@ presence_penalty = 0.2
 max_prompt_token = 4000
 max_completion_token = 4000
 
-DISCORD_TOKEN = os.environ.get("tokenDiscord")
+if os.environ.get("ENV") != "production": DISCORD_TOKEN = get_config("tokenDiscord", "tokenDiscord-dev")
+else: DISCORD_TOKEN = get_config("tokenDiscord", "tokenDiscord-prd")
+print(DISCORD_TOKEN[:10])
