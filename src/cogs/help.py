@@ -1,18 +1,12 @@
 from time import time
 
-import requests
-from src.discordhandler import createThread, stream_reponse_file, send_to_discord, send_msg, new_stream
 from discord.ext import commands
 from src.config import settings
-
-
+from src.cog_helpers import stream_chat_command
 
 class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.url = settings.stream
-        self.time_msg = time()
-        self.temp_cut = 1
 
     def format_help_map(self, prefix="!"):
         parts = []
@@ -32,25 +26,14 @@ class Help(commands.Cog):
     @commands.command(name='help')
     async def help(self, ctx):
         """Ressort toute la liste de commande disponible"""
-        headers = {
-            "Content-Type": "application/json",
-            # "Authorization": settings.api_key
-        }
-        data = {
-            "content": str(self.format_help_map()),
-            "id": "help_"+str(int(time())),
-            "model": settings.model,
-#            "temperature": settings.temperature,
-#            "top_p": settings.top_p,
-            "frequency_penalty": settings.frequency_penalty,
-            "presence_penalty": settings.presence_penalty,
-            "max_prompt_token": settings.max_prompt_token,
-            "max_completion_token": settings.max_completion_token,
-            "instructions": "Tu devras reformatter la liste de commande discord en indiquant la commande en gras et ce qu'elle fait, range les par catégorie tout en les triant, Formatte la réponse en stylke documentation Discord, chaque catégorie devra être entre ``` ```"
-        }
-        # print(data)
-        response = requests.post(settings.stream, headers=headers, json=data, stream=True)
-        await new_stream("", ctx, response)
+        await stream_chat_command(
+            ctx,
+            self.format_help_map(),
+            model=settings.model,
+            instructions="Tu devras reformater la liste de commandes Discord en indiquant la commande en gras et ce qu'elle fait, les ranger par categorie tout en les triant. Formatte la reponse en style documentation Discord, chaque categorie devra etre entre ``` ```.",
+            target=ctx,
+            conversation_id=f"help_{int(time())}",
+        )
 
 
 

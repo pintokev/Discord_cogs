@@ -1,18 +1,8 @@
-from time import time
-
-import requests
-from src.discordhandler import createThread, stream_reponse_file, send_to_discord, send_msg, new_stream
 from discord.ext import commands
-from src.config import settings
-
-
 
 class Test(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.url = settings.stream
-        self.time_msg = time()
-        self.temp_cut = 1
 
     @commands.command(name='test', aliases=["t"])
     async def codex(self, ctx, *, message):

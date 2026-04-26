@@ -1,11 +1,9 @@
 from discord.ext import commands
 
-import src.config.settings
-from src.discordhandler import createThread, send_msg
 from src.config import settings
-import requests
-import subprocess
-import os
+from src.cog_helpers import send_backend_text
+from src.discordhandler import createThread
+from src.backend_client import post_backend_form, read_attachments
 
 
 class Aci(commands.Cog):
@@ -16,30 +14,22 @@ class Aci(commands.Cog):
     async def asf(self, ctx):
         """Envoie des fichier à openai pour que gpt puisse recréer un envirpnnement virtuel sous python, coder et tester le code en utilisant les fichiers en pièces jointes"""
         thread = await createThread(ctx, "Voici les fichiers")
-        command = [
-            "curl",
-            "-X", "POST", settings.code_interpreter,
-            "-F", f"data={{\"id\":\"{str(thread.id)}\", \"model\":\"{settings.model}\"}}",
-        ]
-        filename = []
-        if ctx.message.attachments:
-            for attachment in ctx.message.attachments:
-                response = requests.get(attachment.url)
-                file_name = attachment.filename
-                with open(file_name, 'wb') as f:
-                    f.write(response.content)
+        if not ctx.message.attachments:
+            await thread.send("Aucun fichier associé en pièces jointes")
+            return
 
-                command.append("-F")
-                command.append("file=@" + file_name)
-                filename.append(file_name)
+        files = await read_attachments(ctx.message.attachments, field_name="file")
+        async with thread.typing():
+            status, text, _ = await post_backend_form(
+                settings.code_interpreter,
+                json_payload={"id": str(thread.id), "model": settings.model},
+                files=files,
+            )
 
-            async with thread.typing():
-                result = subprocess.run(command, capture_output=True, text=True, encoding="utf-8")
-                for file in filename:
-                    os.remove(file)
-                await send_msg(thread, result.stdout)
-            # print(result.stdout)
-        else: return "Aucun fichier associé en pièces jointes\n"
+        if status >= 400:
+            await thread.send(f"Erreur backend ({status}) : {text[:1500]}")
+        else:
+            await thread.send(text[:1900] if text else "Réponse vide.")
 
 
 async def setup(bot):

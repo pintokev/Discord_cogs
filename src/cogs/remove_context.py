@@ -1,7 +1,7 @@
-import requests
 from discord.ext import commands
 from src.discordhandler import createThread
 from src.config import settings
+from src.cog_helpers import send_backend_text
 
 
 class Remove_Contexte(commands.Cog):
@@ -16,8 +16,7 @@ class Remove_Contexte(commands.Cog):
         metadata = {
             "id": str(thread.id)
         }
-        rep = requests.post(str(settings.instructions_url)+"?remove", json=metadata)
-        await thread.send(rep.text)
+        await send_backend_text(thread, str(settings.instructions_url), metadata, params={"remove": ""})
 
 async def setup(bot):
     await bot.add_cog(Remove_Contexte(bot))

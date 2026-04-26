@@ -1,8 +1,7 @@
-import requests
 import discord
 from discord.ext import commands
-from src.discordhandler import createThread
 from src.config import settings
+from src.cog_helpers import send_backend_text
 
 
 class Get_Contexte(commands.Cog):
@@ -20,9 +19,7 @@ class Get_Contexte(commands.Cog):
         metadata = {
             "id": str(maybeThread.id)
         }
-        rep = requests.post(str(settings.get_instructions_url), json=metadata)
-        # print("on command:", rep.text, maybeThread.id)
-        await maybeThread.send(rep.text)
+        await send_backend_text(maybeThread, str(settings.get_instructions_url), metadata)
 
 async def setup(bot):
     await bot.add_cog(Get_Contexte(bot))
