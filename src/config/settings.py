@@ -15,6 +15,15 @@ remove_historique = f"{GPT_BASE_URL}/remove_historique"
 images = f"{GEMINI_BASE_URL}/images"
 new_images = f"{GEMINI_BASE_URL}/new_images"
 
+gpt_images = f"{GPT_BASE_URL}/images"
+gpt_new_images = f"{GPT_BASE_URL}/new_images"
+
+model_gpt_image = "gpt-image-2"
+gpt_image_size = "auto"
+gpt_image_quality = "auto"
+gpt_image_background = "auto"
+gpt_image_output_format = "png"
+
 image_aspect_ratio = "1:1"
 image_size_low = "1K"
 image_size_mid = "2K"
