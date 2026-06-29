@@ -9,7 +9,7 @@ class Ask(commands.Cog):
     @commands.command(name='ask', aliases=["a"])
     async def ask(self, ctx, *, message):
         """Fonction de base qui permet d'envoyer un message à l'API d'openai GPT afin d'obtenir une réponse (chatGPT)"""
-        await stream_chat_command(ctx, message, model=settings.model, instructions=settings.instructions)
+        await stream_chat_command(ctx, message, model=settings.model, instructions=settings.instructions, extra_payload={"text": {"verbosity": "low"}})
 
 
 
